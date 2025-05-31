@@ -1,0 +1,42 @@
+<div class="programs-container">
+  <div class="programs-header">
+    <h3>Programs Attached to This Promo</h3>
+    <button class="btn add-btn" (click)="addProgram()">Add</button>
+  </div>
+
+  <table class="programs-table">
+    <thead>
+      <tr>
+        <th>Program Number</th>
+        <th>Legacy Code</th>
+        <th>Description</th>
+        <th>Start Dt</th>
+        <th>End Dt</th>
+        <th>Status</th>
+        <th>User Id</th>
+        <th>Last Updated</th>
+        <th>Check To Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let program of programs">
+        <td><input [(ngModel)]="program.programNumber" /></td>
+        <td><input [(ngModel)]="program.legacyCode" /></td>
+        <td><input [(ngModel)]="program.description" /></td>
+        <td><input [(ngModel)]="program.startDate" /></td>
+        <td><input [(ngModel)]="program.endDate" /></td>
+        <td>{{ program.status }}</td>
+        <td>{{ program.userId }}</td>
+        <td>{{ program.lastUpdated }}</td>
+        <td><input type="checkbox" [(ngModel)]="program.delete" /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="btn-group">
+    <button class="btn update" (click)="updatePrograms()">Update</button>
+    <button class="btn reject" (click)="rejectChanges()">Reject</button>
+    <button class="btn confirm" (click)="confirmPrograms()">Confirm</button>
+    <button class="btn cancel" (click)="cancelEdit()">Cancel</button>
+  </div>
+</div>

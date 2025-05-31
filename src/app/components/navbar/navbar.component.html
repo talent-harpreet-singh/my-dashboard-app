@@ -1,0 +1,42 @@
+<div class="layout">
+  <aside [class.collapsed]="isCollapsed" class="sidebar">
+    <button class="toggle-btn" (click)="toggleSidebar()">
+      <mat-icon>{{ isCollapsed ? 'menu' : 'menu_open' }}</mat-icon>
+    </button>
+
+    <nav>
+      <ul class="navbar-nav">
+        <li *ngFor="let menu of mainMenus" class="nav-item">
+          <div class="nav-link"
+               [class.active]="openDropdownId === menu.menuOptionNo"
+               [routerLink]="getSubMenus(menu.menuOptionNo).length === 0 ? ['/', menu.slugTx] : null"
+               (click)="toggleDropdown(menu.menuOptionNo)">
+            <div class="nav-link-content">
+              <mat-icon class="menu-icon">{{ getMenuIcon(menu.menuOptionTx) }}</mat-icon>
+              <span class="menu-text">{{ menu.menuOptionTx }}</span>
+            </div>
+            <span *ngIf="getSubMenus(menu.menuOptionNo).length > 0"
+                  class="arrow"
+                  [style.transform]="openDropdownId === menu.menuOptionNo ? 'rotate(180deg)' : 'rotate(0deg)'">
+              <mat-icon>expand_more</mat-icon>
+            </span>
+          </div>
+
+          <ul *ngIf="openDropdownId === menu.menuOptionNo && !isCollapsed" class="dropdown-menu">
+            <li *ngFor="let submenu of getSubMenus(menu.menuOptionNo)"
+                class="dropdown-item"
+                [routerLink]="['/', submenu.slugTx]"
+                routerLinkActive="active">
+              <mat-icon class="submenu-icon">fiber_manual_record</mat-icon>
+              <span class="submenu-text">{{ submenu.menuOptionTx }}</span>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

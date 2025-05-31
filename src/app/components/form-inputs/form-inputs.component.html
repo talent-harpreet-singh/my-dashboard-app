@@ -1,0 +1,82 @@
+<div class="form-card">
+  <div class="form-header">
+    <div class="form-title">PR / RR Bonus Rule 20000002 Details</div>
+    <div class="form-meta">
+      <span><strong>Last Updated:</strong> {{ formData.lastUpdatedDate }}</span>
+      <span><strong>Status:</strong> {{ formData.status }}</span>
+      <span><strong>User ID:</strong> {{ formData.userId }}</span>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="form-row">
+      <label>Display Name:
+        <input [(ngModel)]="formData.displayName" />
+      </label>
+    </div>
+    <div class="form-row">
+      <label>Earn Prefix Display Indicator:
+        <select [(ngModel)]="formData.earnPrefix">
+          <option value="N">N</option>
+          <option value="Y">Y</option>
+        </select>
+      </label>
+    </div>
+    <div class="form-row">
+      <label>LOB:
+        <select [(ngModel)]="formData.lob">
+          <option>Consumer</option>
+          <option>Commercial</option>
+        </select>
+      </label>
+    </div>
+    <div class="form-row">
+      <label>Tier Group Name:
+        <select [(ngModel)]="formData.tierGroup">
+          <option>1 | GOLD</option>
+          <option>2 | PLATINUM</option>
+          <option>3 | DIAMOND</option>
+        </select>
+      </label>
+    </div>
+    <div class="form-row">
+      <label>Merchant Return Eligibility Indicator:
+        <select [(ngModel)]="formData.merchantEligibility">
+          <option>E</option>
+          <option>N</option>
+        </select>
+      </label>
+    </div>
+    <div class="form-row">
+      <label>Expense Code:
+        <input [(ngModel)]="formData.expenseCode" />
+      </label>
+    </div>
+    <div class="form-row">
+      <label>Bonus Type:
+        <select [(ngModel)]="formData.bonusType">
+          <option>P | PREFERRED REWARDS</option>
+          <option>C | CASH BONUS</option>
+        </select>
+      </label>
+    </div>
+    <div class="form-row">
+      <label>Tier Profile:
+        <select [(ngModel)]="formData.tierProfile">
+          <option>STD 50% with Neg End Pt (627)</option>
+          <option>STD 75% with Pos End Pt (828)</option>
+        </select>
+      </label>
+    </div>
+    <div class="form-row">
+      <label>Reporting Group Name:
+        <input [(ngModel)]="formData.reportingGroup" />
+      </label>
+    </div>
+    <div class="form-row">
+      <label>Statement Report Line No:
+        <input type="number" [(ngModel)]="formData.statementReportLineNo" />
+      </label>
+    </div>
+  </div>
+</div>

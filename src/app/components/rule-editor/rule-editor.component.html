@@ -1,0 +1,18 @@
+<div class="rule-editor-scroll">
+  <div class="rule-section">
+    <app-rule-details [details]="ruleDetails"></app-rule-details>
+  </div>
+  <div class="rule-section">
+    <app-form-inputs [formData]="ruleDetails"></app-form-inputs>
+  </div>
+  <div class="rule-section">
+    <app-notes-section [notes]="notes"></app-notes-section>
+  </div>
+  <div class="rule-section">
+    <app-programs-table [programs]="programs"></app-programs-table>
+  </div>
+  <div class="button-bar">
+    <button (click)="saveLocally()">💾 Save Locally</button>
+    <button (click)="clearStorage()">🧹 Clear Storage</button>
+  </div>
+</div>

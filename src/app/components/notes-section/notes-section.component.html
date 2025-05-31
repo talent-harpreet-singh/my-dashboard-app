@@ -1,0 +1,26 @@
+<div class="notes-container">
+  <div class="notes-header">
+    <h3>Notes</h3>
+    <button class="add-btn" (click)="addNote()">➕ Add Note</button>
+  </div>
+  <table class="notes-table">
+    <thead>
+      <tr>
+        <th>Note Seq No</th>
+        <th>Notes</th>
+        <th>User ID</th>
+        <th>Last Updated Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let note of notes">
+        <td>{{ note.seqNo }}</td>
+        <td>
+          <input [(ngModel)]="note.note" (input)="onEdit('note', note, note.note)" class="note-input" />
+        </td>
+        <td>{{ note.userId }}</td>
+        <td>{{ note.lastUpdated }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
