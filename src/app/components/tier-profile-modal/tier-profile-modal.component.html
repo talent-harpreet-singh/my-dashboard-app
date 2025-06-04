@@ -1,0 +1,24 @@
+<div class="modal-overlay">
+  <div class="modal-container">
+    <h3 class="modal-header">Tier Profiles</h3>
+
+    <table class="tier-table">
+      <thead>
+        <tr>
+          <th>Tier Id</th>
+          <th>Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let profile of tierProfiles" (click)="onSelect(profile.name)">
+          <td>{{ profile.id }}</td>
+          <td class="clickable">{{ profile.name }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="modal-footer">
+      <button (click)="close.emit()">Cancel</button>
+    </div>
+  </div>
+</div>

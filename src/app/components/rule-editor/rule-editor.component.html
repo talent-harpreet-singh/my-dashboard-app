@@ -6,7 +6,7 @@
     <app-form-inputs [formData]="ruleDetails"></app-form-inputs>
   </div>
   <div class="rule-section">
-    <app-notes-section [notes]="notes"></app-notes-section>
+    <app-notes-section [notes]="notes" [showDelete]="showDelete" (noteAdded)="onNoteAdded()"></app-notes-section>
   </div>
   <div class="rule-section">
     <app-programs-table [programs]="programs"></app-programs-table>

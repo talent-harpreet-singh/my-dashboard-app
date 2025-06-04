@@ -31,4 +31,5 @@ export interface Note {
   note: string;
   userId: string;
   lastUpdated: string;
+  isNew?: boolean;
 }

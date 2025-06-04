@@ -62,10 +62,13 @@
     </div>
     <div class="form-row">
       <label>Tier Profile:
-        <select [(ngModel)]="formData.tierProfile">
-          <option>STD 50% with Neg End Pt (627)</option>
-          <option>STD 75% with Pos End Pt (828)</option>
-        </select>
+        <input
+          type="text"
+          [value]="formData.tierProfile"
+          (click)="openTierModal()"
+          readonly
+          class="tier-profile-input"
+        />
       </label>
     </div>
     <div class="form-row">
@@ -79,4 +82,11 @@
       </label>
     </div>
   </div>
+
+  <app-tier-profile-modal
+    *ngIf="showTierProfileModal"
+    [tierProfiles]="tierProfiles"
+    (selectTier)="setTierProfile($event)"
+    (close)="showTierProfileModal = false"
+  ></app-tier-profile-modal>
 </div>

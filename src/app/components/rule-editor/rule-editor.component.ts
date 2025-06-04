@@ -22,6 +22,7 @@ export class RuleEditorComponent implements OnInit {
   ruleDetails!: RuleDetails;
   programs!: Program[];
   notes!: Note[];
+  showDelete: boolean = true;
 
   constructor(private dataService: DataService) {}
 
@@ -39,13 +40,25 @@ export class RuleEditorComponent implements OnInit {
     }
   }
 
+  onNoteAdded(): void {
+    this.showDelete = true;
+  }
+
+
   saveLocally(): void {
+
+    this.notes = this.notes.map(note => {
+      const { isNew, ...cleanNote } = note;
+      return cleanNote;
+    });
+
     const data = {
       ruleDetails: this.ruleDetails,
       programs: this.programs,
       notes: this.notes
     };
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+    this.showDelete = false;
     alert('Saved locally!');
   }
 

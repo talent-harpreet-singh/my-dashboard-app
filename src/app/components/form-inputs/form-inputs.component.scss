@@ -90,3 +90,17 @@ input:focus, select:focus {
   from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+
+input.tier-profile-input {
+  cursor: pointer;
+  background-color: #f5faff;
+  border: 1px solid #0073e6;
+  border-radius: 4px;
+  padding: 6px;
+  transition: 0.2s ease;
+}
+
+input.tier-profile-input:hover {
+  background-color: #e0f0ff;
+}

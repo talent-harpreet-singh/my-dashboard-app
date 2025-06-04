@@ -63,3 +63,24 @@
   from { opacity: 0 }
   to { opacity: 1 }
 }
+
+.last-updated-cell {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.delete-btn {
+  background-color: #cc3333;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.delete-btn:hover {
+  background-color: #a60000;
+}
