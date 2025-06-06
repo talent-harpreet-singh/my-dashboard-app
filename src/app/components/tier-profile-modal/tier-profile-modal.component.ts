@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-tier-profile-modal',
   templateUrl: './tier-profile-modal.component.html',
-  styleUrls: ['./tier-profile-modal.component.scss'],
   standalone: true,
   imports: [CommonModule]
 })

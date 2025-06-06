@@ -14,7 +14,6 @@ const LOCAL_STORAGE_KEY = 'ruleEditorData';
 @Component({
   selector: 'app-rule-editor',
   templateUrl: './rule-editor.component.html',
-  styleUrls: ['./rule-editor.component.scss'],
   imports: [FormInputsComponent, ProgramsTableComponent, NotesSectionComponent, RuleDetailsComponent, CommonModule, MatButtonModule, MatIconModule],
   standalone: true
 })

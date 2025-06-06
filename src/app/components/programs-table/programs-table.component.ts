@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-programs-table',
   templateUrl: './programs-table.component.html',
-  styleUrls: ['./programs-table.component.css'],
   standalone: true,
   imports: [FormsModule, CommonModule]
 })

@@ -8,7 +8,6 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-notes-section',
   templateUrl: './notes-section.component.html',
-  styleUrls: ['./notes-section.component.css'],
   standalone: true,
   imports: [CommonModule, MatButtonModule, MatIconModule, FormsModule]
 })

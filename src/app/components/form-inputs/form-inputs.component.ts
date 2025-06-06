@@ -7,7 +7,6 @@ import { TierProfileModalComponent } from "../tier-profile-modal/tier-profile-mo
 @Component({
   selector: 'app-form-inputs',
   templateUrl: './form-inputs.component.html',
-  styleUrls: ['./form-inputs.component.scss'],
   standalone: true,
   imports: [FormsModule, CommonModule, TierProfileModalComponent]
 })
@@ -17,7 +16,7 @@ export class FormInputsComponent {
   showTierProfileModal = false;
 
   tierProfiles = [
-    { id: 182, name: '8.5 PERCENT (182)' },
+    { id: 182, name: '8.5 PERCENT (182)', },
     { id: 183, name: '5.5 PERCENT (183)' },
     { id: 184, name: '9.5 PERCENT (184)' },
     { id: 186, name: '0% PROFILE (186)' },

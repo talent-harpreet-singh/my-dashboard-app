@@ -2,3 +2,13 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+@import 'app/styles/app.component.css';
+@import 'app/styles/navbar.component.css';
+@import 'app/styles/rule-editor.component.scss';
+@import 'app/styles/form-inputs.component.scss';
+@import 'app/styles/notes-section.component.css';
+@import 'app/styles/tier-profile-modal.component.scss';
+@import 'app/styles/programs-table.component.css';
+@import 'app/styles/rule-details.component.css';
