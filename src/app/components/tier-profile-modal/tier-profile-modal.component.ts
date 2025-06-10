@@ -8,22 +8,24 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule]
 })
 export class TierProfileModalComponent {
-  @Input() tierProfiles: { id: number, name: string }[] = [];
-  @Output() close = new EventEmitter<void>();
-  @Output() selectTier = new EventEmitter<string>();
+    @Input() title: string = 'Modal Table';
+    @Input() columns: string[] = [];
+    @Input() displayKeys: string[] = [];
+    @Input() data: any[] = [];
 
-  @HostListener('document:click', ['$event'])
-  handleOutsideClick(event: MouseEvent) {
-    const path: EventTarget[] = event.composedPath();
-    // Only close if outside this modal container
-    const isClickInside = path.some((el: any) => el.classList?.contains('modal-container'));
-    if (!isClickInside) {
-      this.close.emit();
+    @Output() rowClick = new EventEmitter<any>();
+    @Output() cancel = new EventEmitter<void>();
+
+    @HostListener('document:click', ['$event'])
+    closeOnOutsideClick(event: MouseEvent) {
+      const path = event.composedPath();
+      const inside = path.some((p: any) => p.classList?.contains('modal-container'));
+      if (!inside) {
+        this.cancel.emit();
+      }
+    }
+
+    handleRowClick(row: any) {
+      this.rowClick.emit(row);
     }
   }
-
-  onSelect(tierName: string) {
-    this.selectTier.emit(tierName);
-    this.close.emit();
-  }
-}

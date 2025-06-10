@@ -84,9 +84,12 @@
   </div>
 
   <app-tier-profile-modal
-    *ngIf="showTierProfileModal"
-    [tierProfiles]="tierProfiles"
-    (selectTier)="setTierProfile($event)"
-    (close)="showTierProfileModal = false"
+  *ngIf="showModal"
+  [title]="title"
+  [columns]="['Tier Id', 'Name']"
+  [displayKeys]="['id', 'name']"
+  [data]="tierProfiles"
+  (cancel)="showModal = false"
+  (rowClick)="onTierSelected($event)"
   ></app-tier-profile-modal>
 </div>
