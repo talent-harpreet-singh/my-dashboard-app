@@ -1,22 +1,23 @@
-import { Component, Input } from "@angular/core";
-import { RuleDetails } from "../../models/rule.model";
-import { FormsModule } from "@angular/forms";
-import { CommonModule } from "@angular/common";
-import { TierProfileModalComponent } from "../tier-profile-modal/tier-profile-modal.component";
+// components/form-inputs/form-inputs.component.ts
+import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { DynamicFormComponent } from '../common/dynamic-form/dynamic-form.component';
+import { TierProfileModalComponent } from '../tier-profile-modal/tier-profile-modal.component';
+import { RuleDetails } from '../../models/rule.model';
+import { FormField } from '../../models/form-model';
 
 @Component({
   selector: 'app-form-inputs',
-  templateUrl: './form-inputs.component.html',
   standalone: true,
-  imports: [FormsModule, CommonModule, TierProfileModalComponent]
+  imports: [CommonModule, DynamicFormComponent, TierProfileModalComponent],
+  templateUrl: './form-inputs.component.html',
+  styleUrls: ['../../styles/form-inputs.component.scss']
 })
 export class FormInputsComponent {
   @Input() formData!: RuleDetails;
 
-  showTierProfileModal = false;
-
-  title = 'Tier Profiles';
   showModal = false;
+  activeModal: FormField | null = null;
 
   tierProfiles = [
     { id: 182, name: '8.5 PERCENT (182)', extraValue: '182' },
@@ -35,21 +36,71 @@ export class FormInputsComponent {
     { id: 349, name: 'STD 1340% (349)', extraValue: '349' },
   ];
 
-  onTierSelected(row: any) {
-    this.formData.tierProfile = row.name;
-    this.showModal = false;
+  get metadata() {
+    return [
+      { label: 'Last Updated', value: this.formData.lastUpdatedDate },
+      { label: 'Status', value: this.formData.status },
+      { label: 'User ID', value: this.formData.userId }
+    ];
   }
 
-  openTierModal() {
+  formFields: FormField[] = [
+    {
+      key: 'displayName',
+      label: 'Display Name',
+      type: 'text'
+    },
+    {
+      key: 'earnPrefix',
+      label: 'Earn Prefix Display Indicator',
+      type: 'select',
+      options: [
+        { value: 'N', label: 'N' },
+        { value: 'Y', label: 'Y' }
+      ]
+    },
+    {
+      key: 'lob',
+      label: 'LOB',
+      type: 'select',
+      options: [
+        { value: 'Consumer', label: 'Consumer' },
+        { value: 'Commercial', label: 'Commercial' }
+      ]
+    },
+    {
+      key: 'reportingGroup',
+      label: 'Reporting Group',
+      type: 'text'
+    },
+    {
+      key: 'tierProfile',
+      label: 'Tier Profile',
+      type: 'modal-select',
+      readonly: true,
+      modalConfig: {
+        title: 'Tier Profiles',
+        columns: ['Tier Id', 'Name'],
+        displayKeys: ['id', 'name'],
+        data: this.tierProfiles
+      }
+    }
+  ];
+
+  onFieldChange(event: {key: string; value: any}) {
+    this.formData[event.key] = event.value;
+  }
+
+  onModalOpen(field: FormField) {
+    this.activeModal = field;
     this.showModal = true;
   }
 
-  setTierProfile(value: string) {
-    this.formData.tierProfile = value;
-  }
-
-  onChange(field: keyof RuleDetails, event: Event) {
-    const value = (event.target as HTMLInputElement | HTMLSelectElement).value;
-    (this.formData as any)[field] = typeof this.formData[field] === 'number' ? +value : value;
+  onModalSelect(row: any) {
+    if (this.activeModal) {
+      this.formData[this.activeModal.key] = row.name;
+    }
+    this.showModal = false;
+    this.activeModal = null;
   }
 }

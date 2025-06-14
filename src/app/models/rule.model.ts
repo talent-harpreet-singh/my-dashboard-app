@@ -12,6 +12,7 @@ export interface RuleDetails {
   tierProfile: string;
   reportingGroup: string;
   statementReportLineNo: number;
+  [key: string]: string | number;
 }
 
 export interface Program {
