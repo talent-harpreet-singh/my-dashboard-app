@@ -1,8 +1,9 @@
 <!-- app.component.html -->
-
 <div class="app-container">
   <app-navbar (collapsed)="onNavbarCollapsed($event)"></app-navbar>
   <main class="main-content" [class.expanded]="isNavbarCollapsed">
-    <router-outlet></router-outlet>
+    <div class="center-content">
+      <router-outlet></router-outlet>
+    </div>
   </main>
 </div>

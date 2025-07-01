@@ -2,18 +2,35 @@
   display: flex;
   min-height: 100vh;
   background: #f5f6fa;
+  position: relative;
 }
 
-.main-content {
+.content {
   flex: 1;
   overflow-x: hidden;
   position: relative;
-  transition: margin-left 0.3s ease;
-  margin-left: 250px;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-.main-content.expanded {
+.content.expanded {
   margin-left: 60px;
+  /* Make content larger when navbar is collapsed */
+  transform: scale(1.05);
+  transform-origin: center top;
+  /* Adjust padding to accommodate larger content */
+  padding: 15px;
+}
+
+/* Inner content wrapper for better centering */
+.content > * {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 app-navbar {
@@ -27,10 +44,14 @@ app-navbar {
 @media (max-width: 768px) {
   .main-content {
     margin-left: 0;
+    transform: none;
+    padding: 15px;
   }
 
   .main-content.expanded {
     margin-left: 0;
+    transform: none;
+    padding: 15px;
   }
 
   app-navbar {
@@ -42,4 +63,13 @@ app-navbar {
   app-navbar.expanded {
     transform: translateX(0);
   }
+}
+
+.center-content {
+  margin: 0 auto;
+  max-width: 1200px; /* or whatever width you prefer */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* optional, for vertical centering of children */
 }

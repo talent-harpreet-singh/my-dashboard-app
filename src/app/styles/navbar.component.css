@@ -1,6 +1,7 @@
 .layout {
   display: flex;
   min-height: 100vh;
+  width: 100vw;
 }
 
 .sidebar {
@@ -194,3 +195,11 @@
   }
 }
 
+.center-content {
+  margin: 0 auto;
+  max-width: 1200px; /* or whatever width you prefer */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* optional, for vertical centering of children */
+}
