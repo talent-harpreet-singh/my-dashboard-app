@@ -72,13 +72,13 @@ import { FormField } from '../../../models/form-model';
 }
 
 .custom-form-label {
-  width: 320px;                /* fixed width, adjust as needed */
-  max-width: 320px;
+  width: 14rem;
+  max-width: 14rem;
   font-weight: 600;
   margin-bottom: 0;
-  white-space: normal;         /* allow wrapping */
+  white-space: normal;
   word-break: break-word;
-  padding-right: 1rem;         /* space between label and input */
+  padding-right: 1rem;
   box-sizing: border-box;
 }
 
@@ -86,7 +86,7 @@ import { FormField } from '../../../models/form-model';
 .custom-form-select,
 .tier-profile-input {
   flex: 1 1 0;
-  min-width: 220px;
+  min-width: 10rem;
   padding: 0.5rem;
   font-size: 1rem;
 }
