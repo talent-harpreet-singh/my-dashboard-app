@@ -13,9 +13,10 @@ import { FormField } from '../../../models/form-model';
       <div class="form-header" *ngIf="showHeader">
         <div class="form-title">{{ title }}</div>
         <div class="form-meta" *ngIf="metadata">
-          <span *ngFor="let meta of metadata">
-            <strong>{{ meta.label }}:</strong> {{ meta.value }}
-          </span>
+        <div class="form-row" *ngFor="let meta of metadata">
+          <div class="form-label"><strong>{{ meta.label }}:</strong></div>
+          <div class="form-value">{{ meta.value }}</div>
+        </div>
         </div>
       </div>
 

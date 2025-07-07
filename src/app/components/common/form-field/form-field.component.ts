@@ -47,7 +47,7 @@ import { FormField } from '../../../models/form-model';
           </select>
 
           <!-- Modal Select Input -->
-          <div *ngSwitchCase="'modal-select'" class="modal-select-container">
+          <div *ngSwitchCase="'modal-select'" class="custom-form-select">
             <input
               type="text"
               class="tier-profile-input"
@@ -65,23 +65,43 @@ import { FormField } from '../../../models/form-model';
       margin-bottom: 1.5rem;
     }
     .form-row {
-      display: flex;
-      align-items: center;
-      gap: 10rem;
-    }
-    .custom-form-label {
-      min-width: 180px;
-      font-weight: 600;
-      margin-bottom: 0;
-    }
-    .custom-form-control,
-    .custom-form-select,
-    .tier-profile-input {
-      flex: 1 1 0;
-      min-width: 220px;
-      padding: 0.5rem;
-      font-size: 1rem;
-    }
+  display: flex;
+  align-items: flex-start;      /* important for multi-line labels */
+  margin-bottom: 1rem;
+  gap: 10rem;
+}
+
+.custom-form-label {
+  width: 320px;                /* fixed width, adjust as needed */
+  max-width: 320px;
+  font-weight: 600;
+  margin-bottom: 0;
+  white-space: normal;         /* allow wrapping */
+  word-break: break-word;
+  padding-right: 1rem;         /* space between label and input */
+  box-sizing: border-box;
+}
+
+.custom-form-control,
+.custom-form-select,
+.tier-profile-input {
+  flex: 1 1 0;
+  min-width: 220px;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .custom-form-label {
+    width: 100%;
+    max-width: 100%;
+    padding-right: 0;
+  }
+}
     .modal-select-container {
       position: relative;
       width: 100%;

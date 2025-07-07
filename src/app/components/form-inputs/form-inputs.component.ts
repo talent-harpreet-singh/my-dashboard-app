@@ -74,6 +74,15 @@ export class FormInputsComponent {
       type: 'text'
     },
     {
+      key: 'reportingGroup',
+      label: 'Reporting Group uvtyfrdcueysytfyguhiguytfurtyiguhihgyitfurdyertufyigu',
+      type: 'text'
+    },    {
+      key: 'reportingGroup',
+      label: 'Reporting Group',
+      type: 'text'
+    },
+    {
       key: 'tierProfile',
       label: 'Tier Profile',
       type: 'modal-select',
