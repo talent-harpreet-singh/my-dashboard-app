@@ -10,10 +10,11 @@ import { SimpleTableConfig } from '../../models/table.model';
     <div class="table-container">
       <div class="table-header" *ngIf="config.title">
         <h3 class="table-title">{{ config.title }}</h3>
-        <div class="table-subtitle">Showing {{ data.length }} records</div>
+        <div class="table-subtitle">
+          Showing {{ startIndex + 1 }}-{{ endIndex }} of {{ data.length }} records
+        </div>
       </div>
 
-      <div class="table-scroll-container">
       <div class="table-wrapper">
         <table class="simple-table">
           <thead>
@@ -27,7 +28,7 @@ import { SimpleTableConfig } from '../../models/table.model';
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let row of data; let rowIndex = index"
+            <tr *ngFor="let row of paginatedData; let rowIndex = index"
                 class="table-row"
                 [style.animation-delay]="(rowIndex * 50) + 'ms'">
               <td *ngFor="let column of config.columns"
@@ -47,7 +48,25 @@ import { SimpleTableConfig } from '../../models/table.model';
           </tbody>
         </table>
       </div>
-</div>
+
+      <!-- Pagination Controls -->
+      <div class="pagination-container" *ngIf="data.length > itemsPerPage">
+        <button
+          class="pagination-btn prev-btn"
+          [disabled]="currentPage === 1"
+          (click)="previousPage()"
+          [class.disabled]="currentPage === 1">
+          ← Previous
+        </button>
+
+        <button
+          class="pagination-btn next-btn"
+          [disabled]="currentPage >= totalPages"
+          (click)="nextPage()"
+          [class.disabled]="currentPage >= totalPages">
+          Next →
+        </button>
+      </div>
 
       <div class="table-footer" *ngIf="data.length === 0">
         <div class="empty-state">
@@ -65,7 +84,6 @@ import { SimpleTableConfig } from '../../models/table.model';
         0 4px 6px -1px rgba(0, 0, 0, 0.1),
         0 2px 4px -1px rgba(0, 0, 0, 0.06),
         0 0 0 1px rgba(255, 255, 255, 0.05);
-      overflow: auto;
       margin: 1.5rem;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       border: 1px solid rgba(226, 232, 240, 0.8);
@@ -109,14 +127,6 @@ import { SimpleTableConfig } from '../../models/table.model';
       background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
     }
 
-    .table-scroll-container {
-      flex: 1;
-      overflow: auto;
-      position: relative;
-      min-height: 200px; /* Minimum height for content */
-      max-height: calc(100vh - 200px); /* Adjust based on header/footer height */
-    }
-
     .table-title {
       margin: 0;
       font-size: 1.5rem;
@@ -135,8 +145,21 @@ import { SimpleTableConfig } from '../../models/table.model';
     }
 
     .table-wrapper {
-      overflow-x: auto;
       background: white;
+      max-height: 40rem;
+      overflow: hidden;
+    }
+
+    @media (min-width: 1600px) {
+      .table-wrapper {
+        max-height: 50rem;
+      }
+    }
+
+    @media (min-width: 1700px) {
+      .table-wrapper {
+        max-height: 60rem;
+      }
     }
 
     .simple-table {
@@ -181,70 +204,11 @@ import { SimpleTableConfig } from '../../models/table.model';
       position: relative;
     }
 
-    .table-scroll-container::-webkit-scrollbar {
-      width: 10px;
-      height: 10px;
-    }
-
-    .table-scroll-container::-webkit-scrollbar-track {
-      background: #f1f5f9;
-      border-radius: 5px;
-    }
-
-    .table-scroll-container::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 5px;
-      border: 2px solid #f1f5f9;
-    }
-
-    .table-scroll-container::-webkit-scrollbar-thumb:hover {
-      background: #94a3b8;
-    }
-
-    /* For Firefox */
-    .table-scroll-container {
-      scrollbar-width: thin;
-      scrollbar-color: #cbd5e1 #f1f5f9;
-    }
-
-    /* Shadow effect for sticky header */
-    thead::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: -5px;
-      height: 5px;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.1), transparent);
-      pointer-events: none;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .table-container {
-        height: calc(100vh - 2rem);
-        margin: 1rem;
-      }
-
-      .table-scroll-container {
-        max-height: calc(100vh - 150px);
-      }
-    }
-
-    /* Optional: Add shadow when scrolling */
-    .table-scroll-container.is-scrolling thead::after {
-      opacity: 1;
-    }
-
     .table-row:hover {
       background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
       transform: scale(1.01);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
-
-    // .table-row:nth-child(even) {
-    //   background: rgba(248, 250, 252, 0.5);
-    // }
 
     .table-cell {
       padding: 1rem 1.5rem;
@@ -300,6 +264,48 @@ import { SimpleTableConfig } from '../../models/table.model';
       box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
     }
 
+    /* Pagination Styles */
+    .pagination-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.5rem 2rem;
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .pagination-btn {
+      padding: 0.75rem 1.5rem;
+      border: 1px solid #cbd5e1;
+      background: white;
+      color: #475569;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.875rem;
+    }
+
+    .pagination-btn:hover:not(.disabled) {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .pagination-btn.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: #f1f5f9;
+      color: #94a3b8;
+    }
+
+    .pagination-btn.disabled:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
     .table-footer {
       padding: 2rem;
       text-align: center;
@@ -343,31 +349,55 @@ import { SimpleTableConfig } from '../../models/table.model';
         padding: 0.25rem 0.5rem;
         font-size: 0.7rem;
       }
-    }
 
-    /* Loading Animation */
-    .table-row.loading {
-      animation: pulse 1.5s ease-in-out infinite;
-    }
+      .pagination-container {
+        padding: 1rem;
+        gap: 0.5rem;
+      }
 
-    /* Scrollbar Styling */
-    .table-wrapper::-webkit-scrollbar {
-      height: 8px;
-    }
-
-    .table-wrapper::-webkit-scrollbar-track {
-      background: #f1f5f9;
-      border-radius: 4px;
+      .pagination-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+      }
     }
   `]
 })
 export class SimpleTableComponent {
-
-
   @Input() config!: SimpleTableConfig;
   @Input() data: any[] = [];
+  @Input() itemsPerPage: number = 10; // Number of items per page
 
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+
+  currentPage: number = 1;
+
+  get totalPages(): number {
+    return Math.ceil(this.data.length / this.itemsPerPage);
+  }
+
+  get startIndex(): number {
+    return (this.currentPage - 1) * this.itemsPerPage;
+  }
+
+  get endIndex(): number {
+    return Math.min(this.startIndex + this.itemsPerPage, this.data.length);
+  }
+
+  get paginatedData(): any[] {
+    return this.data.slice(this.startIndex, this.endIndex);
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
 
   ngAfterViewInit() {
     // Optional: Add scroll shadow effect
@@ -378,5 +408,4 @@ export class SimpleTableComponent {
       });
     }
   }
-
 }
