@@ -114,6 +114,8 @@ import { SimpleTableConfig } from '../../models/table.model';
       padding: 1.5rem 2rem;
       color: white;
       position: relative;
+      border-radius:0.4rem;
+      border: 1px solid #e2e8f0;
       overflow: hidden;
     }
 
@@ -166,6 +168,8 @@ import { SimpleTableConfig } from '../../models/table.model';
       width: 100%;
       border-collapse: separate;
       border-spacing: 0;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
       font-size: 0.875rem;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
