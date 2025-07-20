@@ -22,6 +22,9 @@ export class MenuService {
     { menuOptionNo: 4, parentMenuOptNo: 0, menuOptionTx: 'Settings', slugTx: 'settings' },
     { menuOptionNo: 5, parentMenuOptNo: 4, menuOptionTx: 'User Settings', slugTx: 'settings-users' },
     { menuOptionNo: 6, parentMenuOptNo: 4, menuOptionTx: 'System Settings', slugTx: 'settings-system' },
+
+    // Tab Demo
+    { menuOptionNo: 7, parentMenuOptNo: 0, menuOptionTx: 'Tab Demo', slugTx: 'tab-demo' },
   ];
 
   constructor() {}

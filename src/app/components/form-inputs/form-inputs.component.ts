@@ -82,18 +82,6 @@ export class FormInputsComponent {
       label: 'Reporting Group',
       type: 'text'
     },
-    {
-      key: 'tierProfile',
-      label: 'Tier Profile',
-      type: 'modal-select',
-      readonly: true,
-      modalConfig: {
-        title: 'Tier Profiles',
-        columns: ['Tier Id', 'Name'],
-        displayKeys: ['id', 'name'],
-        data: this.tierProfiles
-      }
-    }
   ];
 
   onFieldChange(event: {key: string; value: any}) {

@@ -34,7 +34,6 @@ export class DataService {
         lastUpdated: '04-21-2025 02:13:00 PM',
         delete: false
       },
-      // More with same structure
     ];
   }
 

@@ -1,0 +1,72 @@
+<div class="tab-interface-wrapper">
+  <!-- Tab Navigation -->
+  <div [class]="getTabContainerClass()">
+    <div class="tab-navigation">
+      <div
+        *ngFor="let tab of tabs"
+        [class]="getTabClass(tab)"
+        (click)="selectTab(tab)"
+        [attr.aria-label]="tab.label"
+        role="tab"
+        [attr.aria-selected]="isTabActive(tab)"
+        [attr.aria-disabled]="tab.disabled">
+
+        <div class="tab-content">
+          <mat-icon *ngIf="showIcons && tab.icon" class="tab-icon">
+            {{ tab.icon }}
+          </mat-icon>
+          <span class="tab-label">{{ tab.label }}</span>
+
+          <button
+            *ngIf="allowTabClose"
+            class="tab-close-btn"
+            (click)="closeTab(tab.id, $event)"
+            [attr.aria-label]="'Close ' + tab.label + ' tab'"
+            type="button">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <!-- Active tab indicator -->
+        <div *ngIf="isTabActive(tab)" class="active-indicator"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Content -->
+  <div class="tab-content-wrapper">
+    <div
+      *ngIf="activeTab"
+      class="tab-panel"
+      [attr.aria-labelledby]="activeTab.id"
+      role="tabpanel">
+
+      <!-- Warning/Info Section (if needed) -->
+      <div *ngIf="activeTab.warning" class="warning-section">
+        <div class="warning-box">
+          <mat-icon class="warning-icon">warning</mat-icon>
+          <div class="warning-content">
+            <p class="warning-text">{{ activeTab.warning.text }}</p>
+            <div *ngIf="activeTab.warning.links" class="warning-links">
+              <a *ngFor="let link of activeTab.warning.links"
+                 [href]="link.url"
+                 class="warning-link">
+                {{ link.text }}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <div *ngIf="activeTab.componentType; else defaultContent">
+          <ng-container *ngComponentOutlet="activeTab.componentType; inputs: activeTab.componentData"></ng-container>
+        </div>
+        <ng-template #defaultContent>
+          <div [innerHTML]="activeTab.content | safeHtml"></div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

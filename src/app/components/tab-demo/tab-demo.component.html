@@ -1,0 +1,242 @@
+<div class="tab-demo-container">
+  <div class="demo-header">
+    <h1>Tab Interface Component Demo</h1>
+    <p>This demo showcases the reusable tab interface component with different configurations and content examples.</p>
+  </div>
+
+  <!-- Basic Tabs Example -->
+  <section class="demo-section">
+    <h2>Basic Tabs</h2>
+    <p>Standard tab interface with icons and content.</p>
+    <app-tab-interface
+      [tabs]="basicTabs"
+      [activeTabId]="activeTabId"
+      (tabChange)="onTabChange($event)">
+    </app-tab-interface>
+  </section>
+
+  <!-- Tabs with Warning Example -->
+  <!-- <section class="demo-section">
+    <h2>Tabs with Warning Message</h2>
+    <p>Similar to the image you provided, with warning messages and links.</p>
+    <app-tab-interface
+      [tabs]="tabsWithWarning"
+      tabStyle="default">
+    </app-tab-interface>
+  </section> -->
+
+  <!-- Closable Tabs Example -->
+  <!-- <section class="demo-section">
+    <h2>Closable Tabs</h2>
+    <p>Tabs that can be closed by the user.</p>
+    <app-tab-interface
+      [tabs]="closableTabs"
+      [activeTabId]="activeClosableTabId"
+      [allowTabClose]="true"
+      (tabChange)="onClosableTabChange($event)"
+      (tabClose)="onTabClose($event)">
+    </app-tab-interface>
+  </section> -->
+
+  <!-- Disabled Tabs Example -->
+  <!-- <section class="demo-section">
+    <h2>Disabled Tabs</h2>
+    <p>Example showing disabled tab functionality.</p>
+    <app-tab-interface
+      [tabs]="disabledTabs"
+      tabStyle="minimal">
+    </app-tab-interface>
+  </section> -->
+
+  <!-- Style Variants -->
+  <!-- <section class="demo-section">
+    <h2>Different Style Variants</h2>
+
+    <div class="style-variants">
+      <div class="variant-item">
+        <h3>Default Style</h3>
+        <app-tab-interface
+          [tabs]="basicTabs.slice(0, 3)"
+          tabStyle="default">
+        </app-tab-interface>
+      </div>
+
+      <div class="variant-item">
+        <h3>Minimal Style</h3>
+        <app-tab-interface
+          [tabs]="basicTabs.slice(0, 3)"
+          tabStyle="minimal">
+        </app-tab-interface>
+      </div>
+
+      <div class="variant-item">
+        <h3>Outlined Style</h3>
+        <app-tab-interface
+          [tabs]="basicTabs.slice(0, 3)"
+          tabStyle="outlined">
+        </app-tab-interface>
+      </div>
+    </div>
+  </section> -->
+
+  <!-- Usage Instructions -->
+  <!-- <section class="demo-section">
+    <h2>Usage Instructions</h2>
+    <div class="usage-content">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>How to Use the Tab Interface Component</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h4>Basic Usage:</h4>
+          <p>Use the component with tabs array and event handlers:</p>
+          <pre><code>app-tab-interface [tabs]="tabs" (tabChange)="onChange($event)"</code></pre>
+
+          <h4>Available Properties:</h4>
+          <ul>
+            <li><strong>tabs</strong>: Array of TabData objects</li>
+            <li><strong>activeTabId</strong>: ID of the currently active tab</li>
+            <li><strong>showIcons</strong>: Whether to show tab icons (default: true)</li>
+            <li><strong>tabStyle</strong>: 'default' | 'minimal' | 'outlined' (default: 'default')</li>
+            <li><strong>responsive</strong>: Enable responsive behavior (default: true)</li>
+            <li><strong>allowTabClose</strong>: Allow tabs to be closed (default: false)</li>
+            <li><strong>maxTabs</strong>: Maximum number of tabs to display</li>
+          </ul>
+
+          <h4>Events:</h4>
+          <ul>
+            <li><strong>tabChange</strong>: Emitted when a tab is selected</li>
+            <li><strong>tabClose</strong>: Emitted when a tab is closed</li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section> -->
+
+  <!-- Additional Content for Scrolling -->
+  <!-- <section class="demo-section">
+    <h2>Additional Features</h2>
+    <div class="usage-content">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Advanced Features</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h4>Custom Styling:</h4>
+          <p>The component supports three different styling variants:</p>
+          <ul>
+            <li><strong>Default:</strong> Traditional tab style with bottom border indicator</li>
+            <li><strong>Minimal:</strong> Clean, minimal design with subtle background</li>
+            <li><strong>Outlined:</strong> Bordered tabs with rounded corners</li>
+          </ul>
+
+          <h4>Responsive Design:</h4>
+          <p>The component automatically adapts to different screen sizes:</p>
+          <ul>
+            <li>Desktop: Horizontal tab layout</li>
+            <li>Tablet: Responsive grid layout</li>
+            <li>Mobile: Stacked vertical layout</li>
+          </ul>
+
+          <h4>Accessibility:</h4>
+          <p>Built with accessibility in mind:</p>
+          <ul>
+            <li>ARIA labels and roles</li>
+            <li>Keyboard navigation support</li>
+            <li>Screen reader friendly</li>
+            <li>Focus management</li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section> -->
+
+  <!-- More Content -->
+  <!-- <section class="demo-section">
+    <h2>Implementation Examples</h2>
+    <div class="usage-content">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Code Examples</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h4>TypeScript Implementation:</h4>
+          <p>Define your tabs array and event handlers in your component:</p>
+          <pre><code>// Define tabs array with TabData interface
+// Handle tab change events
+// Use with template binding</code></pre>
+
+          <h4>HTML Template:</h4>
+          <pre><code>app-tab-interface
+  [tabs]="tabs"
+  [activeTabId]="activeTabId"
+  [tabStyle]="'minimal'"
+  (tabChange)="onTabChange($event)"
+/app-tab-interface</code></pre>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section> -->
+
+  <!-- Even More Content -->
+  <!-- <section class="demo-section">
+    <h2>Best Practices</h2>
+    <div class="usage-content">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Development Guidelines</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h4>Performance Tips:</h4>
+          <ul>
+            <li>Keep tab content lightweight for better performance</li>
+            <li>Use lazy loading for heavy content</li>
+            <li>Consider virtual scrolling for many tabs</li>
+          </ul>
+
+          <h4>User Experience:</h4>
+          <ul>
+            <li>Limit the number of tabs to 5-7 for better UX</li>
+            <li>Use descriptive tab labels</li>
+            <li>Provide meaningful icons</li>
+            <li>Consider tab order based on user workflow</li>
+          </ul>
+
+          <h4>Styling Guidelines:</h4>
+          <ul>
+            <li>Maintain consistent spacing</li>
+            <li>Use appropriate color contrast</li>
+            <li>Ensure touch targets are large enough</li>
+            <li>Test across different devices</li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section> -->
+
+  <!-- Final Section -->
+  <!-- <section class="demo-section">
+    <h2>Conclusion</h2>
+    <div class="usage-content">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Component Summary</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>The Tab Interface Component provides a flexible, reusable solution for creating tabbed interfaces in Angular applications. With its responsive design, multiple styling options, and accessibility features, it's suitable for a wide range of use cases.</p>
+
+          <p>Key benefits include:</p>
+          <ul>
+            <li>Easy to implement and customize</li>
+            <li>Built-in responsive behavior</li>
+            <li>Multiple styling variants</li>
+            <li>Accessibility compliance</li>
+            <li>TypeScript support</li>
+          </ul>
+
+          <p>This component follows Angular best practices and can be easily extended to meet specific requirements.</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section> -->
+</div>
