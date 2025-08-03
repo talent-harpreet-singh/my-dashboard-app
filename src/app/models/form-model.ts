@@ -7,6 +7,8 @@ export interface FormField {
   modalConfig?: ModalConfig;
   validation?: FieldValidation;
   readonly?: boolean;
+  dependsOn?: FieldDependency;
+  conditionalFields?: ConditionalField[];
 }
 
 export interface SelectOption {
@@ -27,4 +29,15 @@ export interface FieldValidation {
   max?: number;
   pattern?: string;
   message?: string;
+}
+
+export interface FieldDependency {
+  fieldKey: string;
+  value: string | number | string[] | number[];
+  operator?: 'equals' | 'notEquals' | 'contains' | 'in' | 'notIn';
+}
+
+export interface ConditionalField {
+  condition: FieldDependency;
+  fields: FormField[];
 }

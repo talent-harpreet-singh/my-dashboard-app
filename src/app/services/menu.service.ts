@@ -25,6 +25,9 @@ export class MenuService {
 
     // Tab Demo
     { menuOptionNo: 7, parentMenuOptNo: 0, menuOptionTx: 'Tab Demo', slugTx: 'tab-demo' },
+    
+    // Dynamic Form Demo
+    { menuOptionNo: 8, parentMenuOptNo: 0, menuOptionTx: 'Dynamic Form Demo', slugTx: 'dynamic-form-demo' },
   ];
 
   constructor() {}
