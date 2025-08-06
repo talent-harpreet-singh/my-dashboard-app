@@ -3,7 +3,13 @@
     <app-rule-details [details]="ruleDetails"></app-rule-details>
   </div>
   <div class="rule-section">
-    <app-form-inputs [formData]="ruleDetails"></app-form-inputs>
+    <app-dynamic-form
+      [title]="'PR / RR Bonus Rule Details'"
+      [fields]="ruleFormFields"
+      [formData]="ruleDetails"
+      (fieldChange)="onFieldChange($event)"
+      (modalOpen)="onModalOpen($event)"
+    ></app-dynamic-form>
   </div>
   <div class="rule-section">
     <app-notes-section [notes]="notes" [showDelete]="showDelete" (noteAdded)="onNoteAdded()"></app-notes-section>
@@ -16,3 +22,13 @@
     <button (click)="clearStorage()">🧹 Clear Storage</button>
   </div>
 </div>
+
+<app-tier-profile-modal
+  *ngIf="showModal"
+  [title]="activeModal?.modalConfig?.title || ''"
+  [columns]="activeModal?.modalConfig?.columns || []"
+  [displayKeys]="activeModal?.modalConfig?.displayKeys || []"
+  [data]="activeModal?.modalConfig?.data || []"
+  (cancel)="showModal = false"
+  (rowClick)="onModalSelect($event)"
+></app-tier-profile-modal>
