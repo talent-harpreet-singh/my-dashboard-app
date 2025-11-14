@@ -1,36 +1,58 @@
-import { Component, ElementRef, Input, ViewChild, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild, OnInit, OnChanges, OnDestroy, HostListener, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 import { SimpleTableConfig } from '../../models/table.model';
 
 @Component({
   selector: 'app-simple-table',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatIconModule],
   template: `
     <div class="table-container" #tableContainer>
       <div class="table-header" *ngIf="config.title">
         <h3 class="table-title">{{ config.title }}</h3>
         <div class="table-subtitle">
-          Showing {{ startIndex + 1 }}-{{ endIndex }} of {{ data.length }} records
+          Showing {{ displayedData.length }} of {{ totalRecords }} records
         </div>
       </div>
 
       <div class="table-wrapper" #tableWrapper>
-        <div class="table-scroll-container" #scrollContainer>
+        <div class="table-scroll-container" #scrollContainer
+             (scroll)="onScroll()">
           <table class="simple-table">
             <thead>
               <tr>
                 <th *ngFor="let column of config.columns; let i = index"
                     [style.width]="column.width"
                     class="table-header-cell"
-                    [style.animation-delay]="(i * 100) + 'ms'">
-                  {{ column.header }}
+                    [class.sortable]="column.sortable"
+                    [class.sorted-asc]="column.sortable && sortColumn === column.key && sortDirection === 'asc'"
+                    [class.sorted-desc]="column.sortable && sortColumn === column.key && sortDirection === 'desc'"
+                    [style.animation-delay]="(i * 100) + 'ms'"
+                    (mouseenter)="onHeaderHover(column.key)"
+                    (mouseleave)="onHeaderLeave(column.key)"
+                    (click)="column.sortable && sortBy(column.key)">
+                  <div class="header-content">
+                    <span>{{ column.header }}</span>
+                    <span
+                      *ngIf="column.sortable"
+                      class="sort-indicator"
+                      [class.visible]="hoveredColumn === column.key || (sortColumn === column.key && sortedIconVisible)">
+                      <mat-icon
+                        class="sort-icon"
+                        [class.active]="sortColumn === column.key">
+                        {{ getSortIcon(column.key) }}
+                      </mat-icon>
+                    </span>
+                  </div>
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let row of paginatedData; let rowIndex = index"
+              <tr *ngFor="let row of displayedData; let rowIndex = index"
                   class="table-row"
+                  [class.status-live-row]="row['status'] === 'Live'"
+                  [class.status-pending-row]="row['status'] === 'P'"
                   [style.animation-delay]="(rowIndex * 50) + 'ms'">
                 <td *ngFor="let column of config.columns"
                     class="table-cell"
@@ -51,23 +73,10 @@ import { SimpleTableConfig } from '../../models/table.model';
         </div>
       </div>
 
-      <!-- Pagination Controls -->
-      <div class="pagination-container" *ngIf="data.length > itemsPerPage">
-        <button
-          class="pagination-btn prev-btn"
-          [disabled]="currentPage === 1"
-          (click)="previousPage()"
-          [class.disabled]="currentPage === 1">
-          ← Previous
-        </button>
-
-        <button
-          class="pagination-btn next-btn"
-          [disabled]="currentPage >= totalPages"
-          (click)="nextPage()"
-          [class.disabled]="currentPage >= totalPages">
-          Next →
-        </button>
+      <!-- Loading indicator -->
+      <div class="loading-container" *ngIf="isLoading">
+        <div class="loading-spinner"></div>
+        <span>Loading more data...</span>
       </div>
 
       <div class="table-footer" *ngIf="data.length === 0">
@@ -168,14 +177,49 @@ import { SimpleTableConfig } from '../../models/table.model';
       width: 100%;
       height: 100%;
       overflow: auto;
-      scrollbar-width: none; /* Firefox */
-      -ms-overflow-style: none; /* IE and Edge */
       cursor: default;
       position: relative;
+      /* Firefox scrollbar styling - header color matching */
+      scrollbar-width: auto;
+      scrollbar-color: #667eea #e2e8f0;
     }
 
+    /* Webkit scrollbar - always visible track with header colors */
     .table-scroll-container::-webkit-scrollbar {
-      display: none; /* Chrome, Safari, Opera */
+      width: 14px;
+      height: 14px;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .table-scroll-container::-webkit-scrollbar-track {
+      background: #e2e8f0 !important;
+      -webkit-appearance: none;
+      appearance: none;
+      border-radius: 0;
+      margin: 2px;
+    }
+
+    .table-scroll-container::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+      -webkit-appearance: none;
+      appearance: none;
+      border-radius: 7px;
+      border: 2px solid #e2e8f0;
+      min-height: 50px;
+      transition: background 0.2s ease;
+    }
+
+    .table-scroll-container::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #5568d3 0%, #653a8f 100%) !important;
+    }
+
+    .table-scroll-container::-webkit-scrollbar-thumb:active {
+      background: linear-gradient(135deg, #4a57c6 0%, #5a2f7f 100%) !important;
+    }
+
+    .table-scroll-container::-webkit-scrollbar-corner {
+      background: #e2e8f0 !important;
     }
 
     .table-scroll-container:hover {
@@ -212,6 +256,51 @@ import { SimpleTableConfig } from '../../models/table.model';
       text-overflow: ellipsis;
     }
 
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      width: 100%;
+    }
+
+    .sort-indicator {
+      display: flex;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .sort-indicator.visible {
+      opacity: 1;
+    }
+
+    .sort-icon {
+      color: #94a3b8;
+      transition: color 0.2s ease;
+      font-size: 24px !important;
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+    }
+
+    .sort-icon.active {
+      color: #1a4da0;
+    }
+
+    .table-header-cell.sortable {
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s ease;
+    }
+
+    .table-header-cell.sortable:hover {
+      background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+    }
+
+    .table-header-cell.sortable:hover .sort-indicator {
+      opacity: 1;
+    }
+
     .table-header-cell::after {
       content: '';
       position: absolute;
@@ -234,9 +323,24 @@ import { SimpleTableConfig } from '../../models/table.model';
     }
 
     .table-row:hover {
-      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
       transform: scale(1.01);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .status-live-row {
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
+    }
+
+    .status-live-row:hover {
+      background: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 100%) !important;
+    }
+
+    .status-pending-row {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+    }
+
+    .status-pending-row:hover {
+      background: linear-gradient(135deg, #fde68a 0%, #fcd34d 100%) !important;
     }
 
     .table-cell {
@@ -297,9 +401,10 @@ import { SimpleTableConfig } from '../../models/table.model';
       box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
     }
 
-    /* Pagination Styles */
-    .pagination-container {
+    /* Loading Styles */
+    .loading-container {
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       gap: 1rem;
@@ -307,37 +412,23 @@ import { SimpleTableConfig } from '../../models/table.model';
       background: #f8fafc;
       border-top: 1px solid #e2e8f0;
       flex-shrink: 0;
-    }
-
-    .pagination-btn {
-      padding: 0.75rem 1.5rem;
-      border: 1px solid #cbd5e1;
-      background: white;
-      color: #475569;
-      font-weight: 600;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s ease;
+      color: #64748b;
       font-size: 0.875rem;
     }
 
-    .pagination-btn:hover:not(.disabled) {
-      background: #f1f5f9;
-      border-color: #94a3b8;
-      transform: translateY(-1px);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    .loading-spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid #e2e8f0;
+      border-top-color: #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
     }
 
-    .pagination-btn.disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      background: #f1f5f9;
-      color: #94a3b8;
-    }
-
-    .pagination-btn.disabled:hover {
-      transform: none;
-      box-shadow: none;
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     .table-footer {
@@ -392,14 +483,15 @@ import { SimpleTableConfig } from '../../models/table.model';
         font-size: 0.7rem;
       }
 
-      .pagination-container {
+      .loading-container {
         padding: 1rem;
         gap: 0.5rem;
+        font-size: 0.8rem;
       }
 
-      .pagination-btn {
-        padding: 0.5rem 1rem;
-        font-size: 0.8rem;
+      .loading-spinner {
+        width: 24px;
+        height: 24px;
       }
     }
 
@@ -434,23 +526,172 @@ import { SimpleTableConfig } from '../../models/table.model';
     }
   `]
 })
-export class SimpleTableComponent implements OnInit, OnDestroy {
+export class SimpleTableComponent implements OnInit, OnChanges, OnDestroy {
   @Input() config!: SimpleTableConfig;
   @Input() data: any[] = [];
-  @Input() itemsPerPage: number = 10; // Number of items per page
+  @Input() batchSize: number = 50; // Number of items to load per batch
 
   @ViewChild('tableContainer') tableContainer!: ElementRef;
   @ViewChild('tableWrapper') tableWrapper!: ElementRef;
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
 
-  currentPage: number = 1;
+  displayedData: any[] = [];
+  currentBatch: number = 1;
+  isLoading: boolean = false;
+  hasMoreData: boolean = true;
+  sortColumn: string = '';
+  sortDirection: 'asc' | 'desc' = 'desc';
+  hoveredColumn: string | null = null;
+  sortedIconVisible = false;
+  private sortedIconTimer: any = null;
+  allData: any[] = [];
 
   ngOnInit() {
+    this.allData = [...this.data];
+    this.loadInitialData();
     this.adjustTableHeight();
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['data'] && !changes['data'].firstChange) {
+      this.allData = [...this.data];
+      // Reset sorting if needed
+      if (this.sortColumn) {
+        this.sortBy(this.sortColumn);
+      } else {
+        this.loadInitialData();
+      }
+    }
+  }
+
   ngOnDestroy() {
-    // Cleanup if needed
+    if (this.sortedIconTimer) {
+      clearTimeout(this.sortedIconTimer);
+    }
+  }
+
+  loadInitialData() {
+    this.displayedData = this.allData.slice(0, this.batchSize);
+    this.currentBatch = 1;
+    this.hasMoreData = this.allData.length > this.displayedData.length;
+  }
+
+  loadMoreData() {
+    if (this.isLoading || !this.hasMoreData) {
+      return;
+    }
+
+    this.isLoading = true;
+    
+    // Simulate loading delay for better UX
+    setTimeout(() => {
+      const nextBatchStart = this.currentBatch * this.batchSize;
+      const nextBatchEnd = nextBatchStart + this.batchSize;
+      const newData = this.allData.slice(nextBatchStart, nextBatchEnd);
+      
+      this.displayedData = [...this.displayedData, ...newData];
+      this.currentBatch++;
+      this.hasMoreData = nextBatchEnd < this.allData.length;
+      this.isLoading = false;
+      
+      this.adjustTableHeight();
+    }, 300);
+  }
+
+  sortBy(columnKey: string) {
+    // Toggle sort direction if clicking the same column, otherwise default to desc
+    if (this.sortColumn === columnKey) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = columnKey;
+      this.sortDirection = 'desc';
+    }
+
+    this.sortedIconVisible = true;
+    if (this.sortedIconTimer) {
+      clearTimeout(this.sortedIconTimer);
+    }
+    this.sortedIconTimer = setTimeout(() => {
+      this.sortedIconVisible = false;
+    }, 20000);
+
+    // Sort all data
+    this.allData.sort((a, b) => {
+      const aVal = a[columnKey];
+      const bVal = b[columnKey];
+      
+      // Handle null/undefined values
+      if (aVal == null && bVal == null) return 0;
+      if (aVal == null) return 1;
+      if (bVal == null) return -1;
+      
+      // Handle numeric values
+      if (typeof aVal === 'number' && typeof bVal === 'number') {
+        return this.sortDirection === 'asc' ? aVal - bVal : bVal - aVal;
+      }
+      
+      // Handle string values
+      const aStr = String(aVal).toLowerCase();
+      const bStr = String(bVal).toLowerCase();
+      
+      if (aStr < bStr) return this.sortDirection === 'asc' ? -1 : 1;
+      if (aStr > bStr) return this.sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    // Reload data from sorted array
+    this.currentBatch = 1;
+    this.displayedData = this.allData.slice(0, this.batchSize);
+    this.hasMoreData = this.allData.length > this.displayedData.length;
+    
+    this.adjustTableHeight();
+  }
+
+  getSortIcon(columnKey: string): string {
+    if (this.sortColumn === columnKey) {
+      return this.sortDirection === 'asc' ? 'arrow_drop_up' : 'arrow_drop_down';
+    }
+    return 'arrow_drop_down';
+  }
+
+  onHeaderHover(columnKey: string) {
+    this.hoveredColumn = columnKey;
+    if (this.sortColumn === columnKey && this.sortedIconTimer) {
+      clearTimeout(this.sortedIconTimer);
+      this.sortedIconVisible = true;
+    }
+  }
+
+  onHeaderLeave(columnKey: string) {
+    if (this.sortColumn === columnKey) {
+      this.sortedIconVisible = true;
+      this.sortedIconTimer = setTimeout(() => {
+        this.sortedIconVisible = false;
+      }, 20000);
+    }
+    this.hoveredColumn = null;
+  }
+
+  onScroll() {
+    if (!this.scrollContainer) {
+      return;
+    }
+
+    const element = this.scrollContainer.nativeElement;
+    const scrollTop = element.scrollTop;
+    const scrollHeight = element.scrollHeight;
+    const clientHeight = element.clientHeight;
+    
+    // Trigger load more when user scrolls to 80% of the content
+    const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
+    
+    if (scrollPercentage >= 0.8 && this.hasMoreData && !this.isLoading) {
+      this.loadMoreData();
+    }
+  }
+
+  get totalRecords(): number {
+    return this.allData.length;
   }
 
   @HostListener('window:resize')
@@ -524,14 +765,14 @@ export class SimpleTableComponent implements OnInit, OnDestroy {
         availableHeight = viewportHeight - 150;
       }
 
-      // Calculate content height (header + table content + pagination)
+      // Calculate content height (header + table content + loading indicator)
       const headerElement = container.querySelector('.table-header') as HTMLElement;
-      const paginationElement = container.querySelector('.pagination-container') as HTMLElement;
+      const loadingElement = container.querySelector('.loading-container') as HTMLElement;
       const headerHeight = headerElement?.offsetHeight || 0;
-      const paginationHeight = paginationElement?.offsetHeight || 0;
+      const loadingHeight = loadingElement?.offsetHeight || 0;
       const tableContentHeight = this.calculateTableContentHeight();
 
-      const totalContentHeight = headerHeight + tableContentHeight + paginationHeight;
+      const totalContentHeight = headerHeight + tableContentHeight + loadingHeight;
 
       // Set container height based on content vs available space
       if (totalContentHeight <= availableHeight) {
@@ -550,38 +791,8 @@ export class SimpleTableComponent implements OnInit, OnDestroy {
     // Estimate table content height based on number of rows
     const rowHeight = 60; // Approximate height per row
     const headerHeight = 50; // Approximate header height
-    const visibleRows = Math.min(this.paginatedData.length, this.itemsPerPage);
+    const visibleRows = this.displayedData.length;
     return headerHeight + (visibleRows * rowHeight);
-  }
-
-  get totalPages(): number {
-    return Math.ceil(this.data.length / this.itemsPerPage);
-  }
-
-  get startIndex(): number {
-    return (this.currentPage - 1) * this.itemsPerPage;
-  }
-
-  get endIndex(): number {
-    return Math.min(this.startIndex + this.itemsPerPage, this.data.length);
-  }
-
-  get paginatedData(): any[] {
-    return this.data.slice(this.startIndex, this.endIndex);
-  }
-
-  previousPage(): void {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-      setTimeout(() => this.adjustTableHeight(), 50);
-    }
-  }
-
-  nextPage(): void {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-      setTimeout(() => this.adjustTableHeight(), 50);
-    }
   }
 
   ngAfterViewInit() {
