@@ -97,7 +97,8 @@ export class RuleEditorComponent implements OnInit {
     {
       key: 'reportingGroup',
       label: 'Reporting Group',
-      type: 'text'
+      type: 'text',
+      readonly: true
     },
     {
       key: 'statementReportLineNo',
@@ -119,6 +120,11 @@ export class RuleEditorComponent implements OnInit {
       this.ruleDetails = this.dataService.getRuleDetails();
       this.programs = this.dataService.getPrograms();
       this.notes = this.dataService.getNotes();
+    }
+    
+    // Set default value for readonly reportingGroup field
+    if (!this.ruleDetails.reportingGroup) {
+      this.ruleDetails.reportingGroup = '6';
     }
   }
 
