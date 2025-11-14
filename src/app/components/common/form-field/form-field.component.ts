@@ -62,13 +62,16 @@ import { FormField } from '../../../models/form-model';
   `,
   styles: [`
     .custom-form-group {
-      margin-bottom: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .custom-form-group:last-child {
+      margin-bottom: 0;
     }
     .form-row {
   display: flex;
   align-items: flex-start;      /* important for multi-line labels */
-  margin-bottom: 1rem;
-  gap: 10rem;
+  gap: 1rem;
 }
 
 .custom-form-label {
