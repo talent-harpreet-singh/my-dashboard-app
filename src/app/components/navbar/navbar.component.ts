@@ -9,7 +9,8 @@ import { RouterModule } from '@angular/router';
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, RouterModule]
+  imports: [CommonModule, MatIconModule, MatButtonModule, RouterModule],
+  styleUrls: ['../../styles/navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
   @Output() collapsed = new EventEmitter<boolean>();

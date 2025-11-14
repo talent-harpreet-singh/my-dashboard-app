@@ -1,8 +1,13 @@
 <div class="layout">
   <aside [class.collapsed]="isCollapsed" class="sidebar">
-    <button class="toggle-btn" (click)="toggleSidebar()">
-      <mat-icon>{{ isCollapsed ? 'menu' : 'menu_open' }}</mat-icon>
-    </button>
+    <div class="sidebar-header">
+      <button class="toggle-btn" (click)="toggleSidebar()">
+        <mat-icon>{{ isCollapsed ? 'menu' : 'menu_open' }}</mat-icon>
+      </button>
+      <div class="logo-container" *ngIf="!isCollapsed">
+        <div class="bofa-logo">Bank of America</div>
+      </div>
+    </div>
 
     <nav>
       <ul class="navbar-nav">
@@ -37,6 +42,11 @@
   </aside>
 
   <main class="content">
+    <div class="content-logo-wrapper" [class.collapsed]="isCollapsed">
+      <div class="content-logo">
+        <img src="/bofa-logo.svg" alt="Bank of America" class="bofa-icon" />
+      </div>
+    </div>
     <div class="center-content">
       <router-outlet></router-outlet>
     </div>
