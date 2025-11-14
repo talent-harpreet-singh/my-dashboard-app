@@ -5,6 +5,7 @@ export interface SimpleTableColumn {
   key: string;
   header: string;
   width?: string;
+  sortable?: boolean;
 }
 
 export interface SimpleTableConfig {

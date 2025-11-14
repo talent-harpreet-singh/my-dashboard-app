@@ -9,19 +9,22 @@ import { SimpleTableComponent } from '../table/table.component';
     <app-simple-table
       [config]="tableConfig"
       [data]="bonusRules"
+      [batchSize]="batchSize"
     ></app-simple-table>
   `
 })
 export class PrBonusRulesComponent {
+  batchSize: number = 30; // Load 30 items at a time
+
   tableConfig = {
     title: 'PR Bonus Rules',
     columns: [
-      { key: 'promoId', header: 'Promo Id', width: '120px' },
-      { key: 'lob', header: 'LOB', width: '80px' },
-      { key: 'displayName', header: 'Display Name' },
-      { key: 'status', header: 'Status', width: '100px' },
-      { key: 'userId', header: 'User ID', width: '120px' },
-      { key: 'lastUpdateDate', header: 'Last Update Date', width: '180px' }
+      { key: 'promoId', header: 'Promo Id', width: '120px', sortable: true },
+      { key: 'lob', header: 'LOB', width: '80px', sortable: true },
+      { key: 'displayName', header: 'Display Name', sortable: true },
+      { key: 'status', header: 'Status', width: '100px', sortable: true },
+      { key: 'userId', header: 'User ID', width: '120px', sortable: true },
+      { key: 'lastUpdateDate', header: 'Last Update Date', width: '180px', sortable: true }
     ]
   };
 
