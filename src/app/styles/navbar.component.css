@@ -251,7 +251,7 @@
 
 .content-logo {
   padding: 0 36px;
-  padding-left: 276px; /* 240px sidebar + 36px padding */
+  /* padding-left: 276px; 240px sidebar + 36px padding */
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -316,7 +316,7 @@
   
   .content-logo {
     padding: 0 24px;
-    padding-left: 276px;
+    /* padding-left: 276px; */
   }
   
   .header-right {
