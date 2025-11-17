@@ -11,7 +11,11 @@
   transition: all 0.3s ease;
   overflow: hidden;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-  position: relative;
+  position: fixed;
+  top: 81px;
+  left: 0;
+  height: calc(100vh - 58px); /* Full height minus header */
+  z-index: 900;
 }
 
 .sidebar-header {
@@ -34,6 +38,7 @@
   width: 60px;
 }
 
+
 .sidebar.collapsed .menu-text,
 .sidebar.collapsed .submenu-text,
 .sidebar.collapsed .arrow {
@@ -50,7 +55,6 @@
 }
 
 .toggle-btn {
-  margin: 10px;
   background: transparent;
   border: none;
   color: white;
@@ -215,74 +219,131 @@
 .content {
   flex: 1;
   position: relative;
-  padding-top: 50px;
+  padding-top: 58px; /* Match header min-height */
+  margin-left: 240px; /* Sidebar width */
+  transition: margin-left 0.3s ease;
+}
+
+.layout .sidebar.collapsed ~ .content {
+  margin-left: 60px; /* Collapsed sidebar width */
 }
 
 .content-logo-wrapper {
   position: fixed;
   top: 0;
-  left: 240px;
-  width: calc(100% - 240px);
+  left: 0;
+  width: 100%;
   background: white;
-  z-index: 999;
+  z-index: 1000;
   border-bottom: 1px solid #e0e0e0;
-  padding: 12px 0;
+  padding: 14px 0;
   transition: all 0.3s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.content-logo-wrapper.collapsed {
-  left: 60px;
-  width: calc(100% - 60px);
-}
-
-.content-logo {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
-  display: flex;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  min-height: 58px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
 }
 
+.content-logo-wrapper.collapsed .content-logo {
+  padding-left: 96px; /* 60px collapsed sidebar + 36px padding */
+}
+
+.content-logo {
+  padding: 0 36px;
+  padding-left: 276px; /* 240px sidebar + 36px padding */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  transition: padding-left 0.3s ease;
+}
+
+.header-center-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.rewards-admin-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a4da0;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 36px;
+}
+
 .bofa-icon {
-  height: auto;
-  max-width: 120px;
+  width: 200px;
+  height: 30px;
+  object-fit: contain;
 }
 
 .center-content {
-  margin: 0 auto;
   max-width: 1200px; /* or whatever width you prefer */
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center; /* optional, for vertical centering of children */
+  margin-top:3rem
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .content {
-    padding-top: 60px;
+    padding-top: 66px;
+  }
+  
+  .sidebar {
+    top: 66px;
+    height: calc(100vh - 66px);
   }
   
   .content-logo-wrapper {
-    padding: 8px 0;
+    padding: 12px 0;
+    min-height: 66px;
   }
   
   .content-logo {
-    padding: 0 16px;
+    padding: 0 24px;
+    padding-left: 276px;
+  }
+  
+  .header-right {
+    padding: 0 24px;
   }
   
   .bofa-icon {
-    width: 100px;
+    width: 160px;
+    height: 24px;
+  }
+  
+  .rewards-admin-title {
+    font-size: 18px;
   }
 }
 
 @media (max-width: 480px) {
   .bofa-icon {
-    width: 90px;
+    width: 140px;
+    height: 21px;
   }
   
   .content-logo {
     padding: 0 12px;
+  }
+  
+  .rewards-admin-title {
+    font-size: 16px;
   }
 }

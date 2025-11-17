@@ -31,7 +31,7 @@
 /* Inner content wrapper for better centering */
 .content > * {
   width: 100%;
-  max-width: 1200px;
+  /* max-width: 1200px; */
   margin: 0 auto;
 }
 
@@ -68,10 +68,10 @@ app-navbar {
 }
 
 .center-content {
-  margin: 0 auto;
   max-width: 1200px; /* or whatever width you prefer */
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center; /* optional, for vertical centering of children */
+  margin-top:3rem
 }
