@@ -13,7 +13,7 @@ import { FormInputsComponent } from '../form-inputs/form-inputs.component';
 @Component({
   selector: 'app-tab-demo',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatCardModule, TabInterfaceComponent, NotesSectionComponent],
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatCardModule, TabInterfaceComponent],
   templateUrl: './tab-demo.component.html',
   styleUrls: ['../../styles/tab-demo.component.scss']
 })

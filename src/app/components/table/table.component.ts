@@ -1,25 +1,39 @@
-import { Component, ElementRef, Input, ViewChild, OnInit, OnChanges, OnDestroy, HostListener, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, Input, Output, EventEmitter, ViewChild, OnInit, OnChanges, OnDestroy, HostListener, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { SimpleTableConfig } from '../../models/table.model';
 
 @Component({
   selector: 'app-simple-table',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule, MatButtonModule],
   template: `
     <div class="table-container" #tableContainer>
       <div class="table-header" *ngIf="config.title">
-        <h3 class="table-title">{{ config.title }}</h3>
-        <div class="table-subtitle">
-          Showing {{ displayedData.length }} of {{ totalRecords }} records
+        <div class="table-header-content">
+          <div class="table-title-section">
+            <h3 class="table-title">{{ config.title }}</h3>
+            <div class="table-subtitle">
+              Showing {{ displayedData.length }} of {{ totalRecords }} records
+            </div>
+          </div>
+          <button *ngIf="showExportButton" 
+                  class="export-btn" 
+                  [class.exporting]="isExporting"
+                  [disabled]="isExporting"
+                  (click)="onExportClick()">
+            <mat-icon *ngIf="!isExporting">file_download</mat-icon>
+            <mat-icon *ngIf="isExporting" class="spinning">hourglass_empty</mat-icon>
+            <span>{{ isExporting ? 'Exporting...' : 'Export to Excel' }}</span>
+          </button>
         </div>
       </div>
 
       <div class="table-wrapper" #tableWrapper>
         <div class="table-scroll-container" #scrollContainer
              (scroll)="onScroll()">
-          <table class="simple-table">
+          <table class="simple-table" [id]="tableId">
             <thead>
               <tr>
                 <th *ngFor="let column of config.columns; let i = index"
@@ -148,6 +162,19 @@ import { SimpleTableConfig } from '../../models/table.model';
       background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
     }
 
+    .table-header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      position: relative;
+      z-index: 1;
+      gap: 1rem;
+    }
+
+    .table-title-section {
+      flex: 1;
+    }
+
     .table-title {
       margin: 0;
       font-size: 1.5rem;
@@ -163,6 +190,62 @@ import { SimpleTableConfig } from '../../models/table.model';
       opacity: 0.9;
       position: relative;
       z-index: 1;
+    }
+
+    .export-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1.25rem;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      position: relative;
+      z-index: 2;
+    }
+
+    .export-btn:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .export-btn:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .export-btn:disabled,
+    .export-btn.exporting {
+      opacity: 0.7;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .export-btn mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    .export-btn .spinning {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     .table-wrapper {
@@ -530,6 +613,10 @@ export class SimpleTableComponent implements OnInit, OnChanges, OnDestroy {
   @Input() config!: SimpleTableConfig;
   @Input() data: any[] = [];
   @Input() batchSize: number = 50; // Number of items to load per batch
+  @Input() tableId: string = ''; // Optional table ID for export functionality
+  @Input() showExportButton: boolean = false; // Show export button in header
+  @Input() isExporting: boolean = false; // Loading state for export
+  @Output() exportClick = new EventEmitter<string>(); // Emit tableId when export is clicked
 
   @ViewChild('tableContainer') tableContainer!: ElementRef;
   @ViewChild('tableWrapper') tableWrapper!: ElementRef;
@@ -670,6 +757,12 @@ export class SimpleTableComponent implements OnInit, OnChanges, OnDestroy {
       }, 20000);
     }
     this.hoveredColumn = null;
+  }
+
+  onExportClick(): void {
+    if (this.tableId) {
+      this.exportClick.emit(this.tableId);
+    }
   }
 
   onScroll() {
