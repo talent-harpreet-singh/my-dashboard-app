@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Program } from '../../models/rule.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { exportTableToExcel } from '../../utils/excel-export.util';
 
 @Component({
   selector: 'app-programs-table',
@@ -11,6 +12,7 @@ import { CommonModule } from '@angular/common';
 })
 export class ProgramsTableComponent {
   @Input() programs: Program[] = [];
+  exportFileName = 'Programs.xlsx';
 
   addProgram() {
     const newProgram: Program = {
@@ -41,5 +43,9 @@ export class ProgramsTableComponent {
 
   cancelEdit() {
     alert('Canceled edits (UI only).');
+  }
+
+  exportToExcel(): void {
+    exportTableToExcel('programsTable', this.exportFileName, 'Programs');
   }
 }

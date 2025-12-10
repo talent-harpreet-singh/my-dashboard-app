@@ -1,5 +1,21 @@
 import * as XLSX from 'xlsx';
 
+export function exportTableToExcel(
+  tableId: string,
+  fileName: string = 'Export.xlsx',
+  sheetName: string = 'Sheet1'
+): void {
+  const element = document.getElementById(tableId);
+  if (!element) {
+    console.error(`Table element with ID '${tableId}' not found`);
+    return;
+  }
+  const worksheet: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+  const workbook: XLSX.WorkBook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+  XLSX.writeFile(workbook, fileName);
+}
+
 export interface ExcelExportColumn {
   key: string;
   header: string;
@@ -27,136 +43,7 @@ export interface ExcelExportResult {
 }
 
 
-export async function exportToExcel(options: ExcelExportOptions): Promise<ExcelExportResult> {
-  const {
-    fileName,
-    sheetName = 'Sheet1',
-    columns,
-    data,
-    freezeHeaderRow = true,
-    compression = true,
-    cellStyles = false,
-    chunkSize = 1000,
-    onProgress
-  } = options;
 
-  try {
-    if (!data || data.length === 0) {
-      return {
-        success: false,
-        error: 'No data to export'
-      };
-    }
-
-    if (!columns || columns.length === 0) {
-      return {
-        success: false,
-        error: 'No columns defined for export'
-      };
-    }
-
-    const exportData: Array<Record<string, any>> = [];
-    const totalRecords = data.length;
-
-    for (let i = 0; i < totalRecords; i += chunkSize) {
-      const chunk = data.slice(i, Math.min(i + chunkSize, totalRecords));
-      
-      const chunkData = chunk.map(row => {
-        const exportRow: Record<string, any> = {};
-        columns.forEach(col => {
-          exportRow[col.header] = row[col.key] ?? '';
-        });
-        return exportRow;
-      });
-
-      exportData.push(...chunkData);
-      
-      if (onProgress) {
-        const current = Math.min(i + chunkSize, totalRecords);
-        onProgress({
-          current,
-          total: totalRecords,
-          percentage: Math.round((current / totalRecords) * 100)
-        });
-      }
-      
-      if (i + chunkSize < totalRecords) {
-        await new Promise(resolve => setTimeout(resolve, 0));
-      }
-    }
-
-    const headers = columns.map(col => col.header);
-    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData, {
-      header: headers,
-      skipHeader: false
-    });
-
-    const columnWidths = calculateColumnWidths(exportData, columns);
-    worksheet['!cols'] = columnWidths;
-
-    if (freezeHeaderRow) {
-      worksheet['!freeze'] = {
-        xSplit: 0,
-        ySplit: 1,
-        topLeftCell: 'A2',
-        activePane: 'bottomLeft'
-      };
-    }
-
-    const workbook: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
-
-    const writeOptions: XLSX.WritingOptions = {
-      bookType: 'xlsx',
-      type: 'array',
-      cellStyles,
-      compression
-    };
-
-    const result = await downloadExcelFile(workbook, fileName, writeOptions, totalRecords);
-
-    return {
-      success: true,
-      fileName
-    };
-
-  } catch (error) {
-    console.error('Error exporting to Excel:', error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error occurred during export'
-    };
-  }
-}
-
-function calculateColumnWidths(
-  exportData: Array<Record<string, any>>,
-  columns: ExcelExportColumn[]
-): Array<{ wch: number }> {
-  const columnWidths: Array<{ wch: number }> = [];
-
-  columns.forEach((col, index) => {
-    const header = col.header;
-    let maxWidth = col.minWidth || (header.length + 2);
-
-    // Calculate max width in a single pass
-    for (const row of exportData) {
-      const cellValue = String(row[header] || '');
-      maxWidth = Math.max(maxWidth, cellValue.length);
-    }
-
-    if (col.maxWidth) {
-      maxWidth = Math.min(maxWidth, col.maxWidth);
-    }
-    if (col.width) {
-      maxWidth = col.width;
-    }
-
-    columnWidths.push({ wch: maxWidth });
-  });
-
-  return columnWidths;
-}
 
 async function downloadExcelFile(
   workbook: XLSX.WorkBook,

@@ -1,10 +1,13 @@
 <div class="programs-container">
   <div class="programs-header">
     <h3>Programs Attached to This Promo</h3>
-    <button class="btn add-btn" (click)="addProgram()">Add</button>
+    <div class="header-actions">
+      <button class="btn add-btn" (click)="addProgram()">Add</button>
+      <button class="btn export-btn" (click)="exportToExcel()">Export to Excel</button>
+    </div>
   </div>
 
-  <table class="programs-table">
+  <table class="programs-table" id="programsTable">
     <thead>
       <tr>
         <th>Program Number</th>
