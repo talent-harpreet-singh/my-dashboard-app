@@ -26,8 +26,20 @@
         <td><input [(ngModel)]="program.programNumber" /></td>
         <td><input [(ngModel)]="program.legacyCode" /></td>
         <td><input [(ngModel)]="program.description" /></td>
-        <td><input [(ngModel)]="program.startDate" /></td>
-        <td><input [(ngModel)]="program.endDate" /></td>
+        <td>
+          <app-date-picker
+            [(ngModel)]="program.startDate"
+            [compact]="true"
+            placeholder="MM-DD-YYYY"
+          ></app-date-picker>
+        </td>
+        <td>
+          <app-date-picker
+            [(ngModel)]="program.endDate"
+            [compact]="true"
+            placeholder="MM-DD-YYYY"
+          ></app-date-picker>
+        </td>
         <td>{{ program.status }}</td>
         <td>{{ program.userId }}</td>
         <td>{{ program.lastUpdated }}</td>

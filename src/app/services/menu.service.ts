@@ -17,6 +17,7 @@ export class MenuService {
     { menuOptionNo: 1, parentMenuOptNo: 0, menuOptionTx: 'Dashboard', slugTx: 'dashboard' },
     { menuOptionNo: 2, parentMenuOptNo: 1, menuOptionTx: 'Analytics', slugTx: 'rule-editor' },
     { menuOptionNo: 3, parentMenuOptNo: 1, menuOptionTx: 'Reports', slugTx: 'reports' },
+    { menuOptionNo: 9, parentMenuOptNo: 1, menuOptionTx: 'Tier Profile Details', slugTx: 'tier-profile-details' },
 
     // Main Menu 2
     { menuOptionNo: 4, parentMenuOptNo: 0, menuOptionTx: 'Settings', slugTx: 'settings' },

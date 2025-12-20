@@ -116,8 +116,8 @@
   color: white;
 }
 
-/* Submenu container */
-.dropdown-menu {
+.sidebar-submenu {
+  display: block;
   list-style: none;
   padding: 8px;
   margin: 4px 0 12px 16px;
@@ -129,7 +129,7 @@
 }
 
 /* Each submenu item */
-.dropdown-item {
+.sidebar-submenu-item {
   display: flex;
   align-items: center;
   padding: 10px 16px;
@@ -152,23 +152,23 @@
 }
 
 /* Hover effect for submenu items */
-.dropdown-item:hover {
+.sidebar-submenu-item:hover {
   background: rgba(74, 87, 198, 0.1);
   color: white;
   transform: translateX(4px);
 }
 
-.dropdown-item:hover .submenu-icon {
+.sidebar-submenu-item:hover .submenu-icon {
   color: white;
 }
 
 /* Active submenu item */
-.dropdown-item.active {
+.sidebar-submenu-item.active {
   background: #4A57C6;
   color: white;
 }
 
-.dropdown-item.active .submenu-icon {
+.sidebar-submenu-item.active .submenu-icon {
   color: white;
 }
 
@@ -200,7 +200,7 @@
 }
 
 /* Submenu animation */
-.dropdown-menu {
+.sidebar-submenu {
   transform-origin: top;
   animation: slideDown 0.3s ease forwards;
 }

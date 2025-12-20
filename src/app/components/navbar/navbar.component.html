@@ -27,9 +27,9 @@
             </span>
           </div>
 
-          <ul *ngIf="openDropdownId === menu.menuOptionNo && !isCollapsed" class="dropdown-menu">
+          <ul *ngIf="openDropdownId === menu.menuOptionNo && !isCollapsed" class="sidebar-submenu">
             <li *ngFor="let submenu of getSubMenus(menu.menuOptionNo)"
-                class="dropdown-item"
+                class="sidebar-submenu-item"
                 [routerLink]="['/', submenu.slugTx]"
                 routerLinkActive="active">
               <mat-icon class="submenu-icon">fiber_manual_record</mat-icon>

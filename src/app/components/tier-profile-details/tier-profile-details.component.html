@@ -1,0 +1,77 @@
+<div class="detail-page-container">
+  <div class="detail-page-header">
+    <h2>Tier Profile Details</h2>
+  </div>
+
+  <div class="detail-page-content">
+    <!-- Top Form Section -->
+    <div class="detail-form-section">
+      <div class="detail-form-row">
+        <label class="detail-label">Profile Name:</label>
+        <input type="text" class="detail-input" [(ngModel)]="profileName" />
+      </div>
+
+      <div class="detail-form-row detail-form-row-notes">
+        <div class="notes-container">
+          <label class="detail-label">Notes:</label>
+          <textarea class="detail-textarea" [(ngModel)]="notes" rows="4"></textarea>
+        </div>
+        <div class="checkbox-container">
+          <label class="detail-checkbox-label">
+            Statement<br/>Credit<br/>Fulfillment:
+            <input type="checkbox" [(ngModel)]="statementCreditFulfillment" />
+          </label>
+        </div>
+      </div>
+
+      <!-- Radio Buttons -->
+      <div class="detail-radio-group">
+        <label class="detail-radio-label">
+          <input type="radio" name="valueType" value="percent" [(ngModel)]="valueType" />
+          Percent
+        </label>
+        <label class="detail-radio-label">
+          <input type="radio" name="valueType" value="amount" [(ngModel)]="valueType" />
+          Amount
+        </label>
+      </div>
+    </div>
+
+    <!-- Tier Table -->
+    <div class="detail-table-section">
+      <table class="detail-table">
+        <thead>
+          <tr>
+            <th colspan="2">End Point</th>
+            <th colspan="2">Standard</th>
+            <th>Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of tierRows; let i = index">
+            <td class="cell-narrow">
+              <input type="text" class="detail-table-input" [(ngModel)]="row.endPoint" />
+            </td>
+            <td class="cell-narrow">
+              <input type="text" class="detail-table-input" />
+            </td>
+            <td class="cell-value">
+              <input type="number" class="detail-table-input text-right" [(ngModel)]="row.standard" step="0.01" />
+            </td>
+            <td class="cell-narrow"></td>
+            <td class="cell-value">
+              <input type="number" class="detail-table-input text-right" [(ngModel)]="row.balance" step="0.01" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="detail-button-group">
+      <button class="detail-btn detail-btn-primary" (click)="onSave()">Save</button>
+      <button class="detail-btn detail-btn-secondary" (click)="onCancel()">Cancel</button>
+    </div>
+  </div>
+</div>
+

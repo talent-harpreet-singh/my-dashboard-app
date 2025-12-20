@@ -1,0 +1,372 @@
+/* ===========================================
+   Detail Page Styles - Global Reusable
+   Matches application theme (blue)
+   =========================================== */
+
+/* Main Container */
+.detail-page-container {
+  background-color: #e6f3ff;
+  border-left: 5px solid #003c74;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  animation: fadeIn 0.5s ease-in;
+}
+
+/* Optional: Centered with max-width */
+.detail-page-container.centered {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Header */
+.detail-page-header {
+  background: #1a4da0;
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 8px 8px 0 0;
+}
+
+.detail-page-header h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+/* Content Area */
+.detail-page-content {
+  padding: 2rem;
+}
+
+/* Form Section */
+.detail-form-section {
+  margin-bottom: 1.5rem;
+}
+
+.detail-form-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.detail-form-row-notes {
+  justify-content: space-between;
+}
+
+.notes-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  flex: 1;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background: #f2f7ff;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #cce0ff;
+}
+
+/* Labels */
+.detail-label {
+  font-weight: 600;
+  color: #003366;
+  min-width: 120px;
+  padding-top: 6px;
+}
+
+.detail-checkbox-label {
+  font-weight: 600;
+  color: #003366;
+  text-align: right;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.detail-checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #1a4da0;
+}
+
+/* Input Fields */
+.detail-input {
+  flex: 1;
+  min-width: 200px;
+  max-width: 500px;
+  padding: 0.55rem 0.8rem;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  transition: all 0.3s ease;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.detail-input:focus {
+  border-color: #1a73e8;
+  box-shadow: 0 0 6px rgba(26, 115, 232, 0.3);
+  outline: none;
+}
+
+/* Textarea */
+.detail-textarea {
+  flex: 1;
+  min-width: 300px;
+  max-width: 600px;
+  min-height: 100px;
+  padding: 0.55rem 0.8rem;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  resize: vertical;
+  font-family: 'Segoe UI', sans-serif;
+  transition: all 0.3s ease;
+}
+
+.detail-textarea:focus {
+  border-color: #1a73e8;
+  box-shadow: 0 0 6px rgba(26, 115, 232, 0.3);
+  outline: none;
+}
+
+/* Radio Group */
+.detail-radio-group {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding: 0.75rem 1rem;
+  background: #d9e6f2;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  border: 1px solid #b8d4e8;
+}
+
+.detail-radio-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #003366;
+  cursor: pointer;
+}
+
+.detail-radio-label input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #1a4da0;
+}
+
+/* Table Section */
+.detail-table-section {
+  margin-bottom: 1.5rem;
+}
+
+.detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.detail-table th {
+  background: #d9e6f2;
+  color: #002041;
+  font-weight: bold;
+  padding: 10px 12px;
+  text-align: center;
+  border: 1px solid #ccc;
+}
+
+.detail-table td {
+  border: 1px solid #ccc;
+  padding: 4px;
+  background: white;
+}
+
+.detail-table tbody tr:nth-child(even) td {
+  background: #f8fbff;
+}
+
+.detail-table-input {
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 13px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  background: white;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.detail-table-input:focus {
+  outline: none;
+  border-color: #1a73e8;
+  box-shadow: 0 0 4px rgba(26, 115, 232, 0.2);
+}
+
+.detail-table .cell-narrow {
+  width: 15%;
+  min-width: 80px;
+}
+
+.detail-table .cell-value {
+  width: 20%;
+  min-width: 100px;
+}
+
+.detail-table .text-right {
+  text-align: right;
+}
+
+/* Button Group */
+.detail-button-group {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding-top: 0.5rem;
+}
+
+/* Buttons - matching app theme */
+.detail-btn {
+  padding: 8px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.detail-btn-primary {
+  background-color: #0073e6;
+  color: white;
+}
+
+.detail-btn-primary:hover {
+  background-color: #005bb5;
+}
+
+.detail-btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.detail-btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+/* Additional button variants for consistency */
+.detail-btn-success {
+  background-color: #5cb85c;
+  color: white;
+}
+
+.detail-btn-success:hover {
+  background-color: #4cae4c;
+}
+
+.detail-btn-danger {
+  background-color: #d9534f;
+  color: white;
+}
+
+.detail-btn-danger:hover {
+  background-color: #c9302c;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .detail-page-container {
+    margin: 0 8px;
+    border-radius: 4px;
+  }
+
+  .detail-page-header {
+    padding: 0.75rem 1rem;
+    border-radius: 4px 4px 0 0;
+  }
+
+  .detail-page-header h2 {
+    font-size: 1.1rem;
+  }
+
+  .detail-page-content {
+    padding: 1rem;
+  }
+
+  .detail-form-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .detail-form-row-notes {
+    flex-direction: column;
+  }
+
+  .notes-container {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .detail-label {
+    min-width: auto;
+  }
+
+  .detail-input,
+  .detail-textarea {
+    max-width: 100%;
+  }
+
+  .checkbox-container {
+    justify-content: flex-start;
+    margin-top: 0.5rem;
+  }
+
+  .detail-radio-group {
+    gap: 1rem;
+    padding: 0.5rem;
+  }
+
+  .detail-table {
+    font-size: 12px;
+  }
+
+  .detail-table th {
+    padding: 8px 6px;
+  }
+
+  .detail-table-input {
+    font-size: 12px;
+    padding: 4px 6px;
+  }
+
+  .detail-button-group {
+    flex-wrap: wrap;
+  }
+
+  .detail-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+}

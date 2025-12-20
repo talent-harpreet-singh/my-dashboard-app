@@ -2,13 +2,14 @@ import { Component, Input } from '@angular/core';
 import { Program } from '../../models/rule.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { DatePickerComponent } from '../common/date-picker/date-picker.component';
 import { exportTableToExcel } from '../../utils/excel-export.util';
 
 @Component({
   selector: 'app-programs-table',
   templateUrl: './programs-table.component.html',
   standalone: true,
-  imports: [FormsModule, CommonModule]
+  imports: [FormsModule, CommonModule, DatePickerComponent]
 })
 export class ProgramsTableComponent {
   @Input() programs: Program[] = [];

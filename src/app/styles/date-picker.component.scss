@@ -1,0 +1,168 @@
+
+.app-date-picker {
+  display: inline-block;
+  width: 100%;
+}
+
+.app-date-picker .date-input-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  cursor: pointer;
+}
+
+.app-date-picker .date-input {
+  flex: 1;
+  padding: 8px 12px;
+  padding-right: 36px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.app-date-picker .date-input:hover {
+  border-color: #1a4da0;
+}
+
+.app-date-picker .date-input:focus {
+  border-color: #1a4da0;
+  box-shadow: 0 0 0 2px rgba(26, 77, 160, 0.1);
+}
+
+.app-date-picker .date-toggle {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+}
+
+.app-date-picker .date-toggle:hover {
+  color: #1a4da0;
+}
+
+/* Compact mode for table cells */
+.app-date-picker.compact .date-input {
+  padding: 4px 8px;
+  padding-right: 32px;
+  font-size: 13px;
+}
+
+.app-date-picker.compact .date-toggle {
+  right: 2px;
+}
+
+.app-date-picker.compact .date-toggle .mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+/* Material Datepicker Customization */
+.mat-datepicker-content {
+  border-radius: 8px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+.mat-calendar {
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+.mat-calendar-header {
+  background: #1a4da0;
+  padding: 8px !important;
+  border-radius: 8px 8px 0 0;
+}
+
+.mat-calendar-controls {
+  margin: 0 !important;
+}
+
+.mat-calendar-period-button {
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+.mat-calendar-arrow {
+  fill: white !important;
+}
+
+.mat-calendar-previous-button,
+.mat-calendar-next-button {
+  color: white !important;
+}
+
+.mat-calendar-previous-button:hover,
+.mat-calendar-next-button:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.mat-calendar-table-header th {
+  color: #1a4da0;
+  font-weight: 600;
+}
+
+.mat-calendar-body-cell-content {
+  border-radius: 50% !important;
+  transition: all 0.2s ease;
+}
+
+.mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover 
+.mat-calendar-body-cell-content {
+  background: rgba(26, 77, 160, 0.1);
+}
+
+.mat-calendar-body-selected {
+  background-color: #1a4da0 !important;
+  color: white !important;
+}
+
+.mat-calendar-body-today:not(.mat-calendar-body-selected) {
+  border-color: #1a4da0 !important;
+}
+
+/* Year and Multi-year views */
+.mat-calendar-body-cell-content.mat-focus-indicator {
+  font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .mat-datepicker-content {
+    max-width: 100vw !important;
+  }
+  
+  .mat-calendar {
+    width: 100% !important;
+  }
+}
+
+/* Programs table specific styles */
+.programs-table .app-date-picker {
+  min-width: 120px;
+}
+
+.programs-table .app-date-picker .date-input {
+  padding: 4px 6px;
+  padding-right: 30px;
+  font-size: 13px;
+  border-radius: 4px;
+}
+
+.programs-table .app-date-picker .date-toggle {
+  right: 2px;
+}
+
+.programs-table .app-date-picker .date-toggle .mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+

@@ -24,7 +24,7 @@
   gap: 0.5rem;
 }
 
-.add-btn {
+.programs-container .add-btn {
   background-color: #0073e6;
   color: white;
   font-weight: 600;
@@ -32,9 +32,10 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  line-height: 1.5;
 }
 
-.export-btn {
+.programs-container .export-btn {
   background-color: #217346;
   color: white;
   font-weight: 600;
@@ -42,6 +43,7 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  line-height: 1.5;
 }
 
 table.programs-table {
@@ -71,13 +73,13 @@ table.programs-table {
   border-radius: 4px;
 }
 
-.btn-group {
+.programs-container .btn-group {
   display: flex;
   gap: 1rem;
   justify-content: flex-start;
 }
 
-.btn {
+.programs-container .btn {
   padding: 6px 14px;
   border: none;
   border-radius: 4px;
@@ -85,13 +87,14 @@ table.programs-table {
   color: white;
   cursor: pointer;
   transition: background 0.2s ease;
+  line-height: 1.5;
 }
 
-.update { background-color: #2274a5; }
-.reject { background-color: #d9534f; }
-.confirm { background-color: #5cb85c; }
-.cancel { background-color: #6c757d; }
+.programs-container .btn.update { background-color: #2274a5; }
+.programs-container .btn.reject { background-color: #d9534f; }
+.programs-container .btn.confirm { background-color: #5cb85c; }
+.programs-container .btn.cancel { background-color: #6c757d; }
 
-.btn:hover {
+.programs-container .btn:hover {
   opacity: 0.85;
 }
