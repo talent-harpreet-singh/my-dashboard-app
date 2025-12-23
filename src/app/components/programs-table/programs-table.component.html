@@ -10,15 +10,15 @@
   <table class="programs-table" id="programsTable">
     <thead>
       <tr>
-        <th>Program Number</th>
-        <th>Legacy Code</th>
-        <th>Description</th>
-        <th>Start Dt</th>
-        <th>End Dt</th>
-        <th>Status</th>
-        <th>User Id</th>
-        <th>Last Updated</th>
-        <th>Check To Delete</th>
+        <th class="sortable" (click)="sortBy('programNumber')">Program Number <span class="sort-icon">{{ getSortIcon('programNumber') }}</span></th>
+        <th class="sortable" (click)="sortBy('legacyCode')">Legacy Code <span class="sort-icon">{{ getSortIcon('legacyCode') }}</span></th>
+        <th class="sortable" (click)="sortBy('description')">Description <span class="sort-icon">{{ getSortIcon('description') }}</span></th>
+        <th class="sortable" (click)="sortBy('startDate')">Start Dt <span class="sort-icon">{{ getSortIcon('startDate') }}</span></th>
+        <th class="sortable" (click)="sortBy('endDate')">End Dt <span class="sort-icon">{{ getSortIcon('endDate') }}</span></th>
+        <th class="sortable" (click)="sortBy('status')">Status <span class="sort-icon">{{ getSortIcon('status') }}</span></th>
+        <th class="sortable" (click)="sortBy('userId')">User Id <span class="sort-icon">{{ getSortIcon('userId') }}</span></th>
+        <th class="sortable" (click)="sortBy('lastUpdated')">Last Updated <span class="sort-icon">{{ getSortIcon('lastUpdated') }}</span></th>
+        <th class="sortable" (click)="sortBy('delete')">Check To Delete <span class="sort-icon">{{ getSortIcon('delete') }}</span></th>
       </tr>
     </thead>
     <tbody>
@@ -30,7 +30,7 @@
           <app-date-picker
             [(ngModel)]="program.startDate"
             [compact]="true"
-            placeholder="MM-DD-YYYY"
+            placeholder="MM-DD-YYYY"            
           ></app-date-picker>
         </td>
         <td>

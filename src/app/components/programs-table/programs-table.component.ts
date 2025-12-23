@@ -14,6 +14,45 @@ import { exportTableToExcel } from '../../utils/excel-export.util';
 export class ProgramsTableComponent {
   @Input() programs: Program[] = [];
   exportFileName = 'Programs.xlsx';
+  
+  sortColumn: keyof Program | '' = '';
+  sortDirection: 'asc' | 'desc' = 'asc';
+
+  sortBy(column: keyof Program): void {
+    if (this.sortColumn === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
+    }
+
+    this.programs.sort((a, b) => {
+      const aVal = a[column];
+      const bVal = b[column];
+
+      // Handle boolean
+      if (typeof aVal === 'boolean' && typeof bVal === 'boolean') {
+        return this.sortDirection === 'asc' 
+          ? (aVal === bVal ? 0 : aVal ? 1 : -1)
+          : (aVal === bVal ? 0 : aVal ? -1 : 1);
+      }
+
+      // Handle string comparison
+      const aStr = String(aVal).toLowerCase();
+      const bStr = String(bVal).toLowerCase();
+      
+      if (aStr < bStr) return this.sortDirection === 'asc' ? -1 : 1;
+      if (aStr > bStr) return this.sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }
+
+  getSortIcon(column: keyof Program): string {
+    if (this.sortColumn === column) {
+      return this.sortDirection === 'asc' ? '▲' : '▼';
+    }
+    return '';
+  }
 
   addProgram() {
     const newProgram: Program = {
