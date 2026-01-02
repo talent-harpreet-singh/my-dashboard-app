@@ -1,0 +1,833 @@
+/* ===========================================
+   Dynamic Table Styles - Global Reusable
+   Matches application theme (blue palette)
+   =========================================== */
+
+// ============================================================================
+// CSS VARIABLES - Reusable Design Tokens
+// ============================================================================
+
+:root {
+  // Primary Colors
+  --dt-primary: #1a4da0;
+  --dt-primary-dark: #003c74;
+  --dt-primary-light: #0073e6;
+  --dt-primary-hover: #005bb5;
+  
+  // Background Colors
+  --dt-bg-light: #e6f3ff;
+  --dt-bg-header: #d9e6f2;
+  --dt-bg-row-even: #f8fbff;
+  --dt-bg-row-hover: #f2f7ff;
+  --dt-bg-container: #e9e6fd;
+  
+  // Text Colors
+  --dt-text-primary: #002041;
+  --dt-text-secondary: #003366;
+  --dt-text-muted: #666;
+  
+  // Border Colors
+  --dt-border: #ccc;
+  --dt-border-light: #b8d4e8;
+  --dt-border-focus: #1a73e8;
+  
+  // Status Colors
+  --dt-success: #5cb85c;
+  --dt-success-hover: #4cae4c;
+  --dt-danger: #d9534f;
+  --dt-danger-hover: #c9302c;
+  --dt-warning: #f0ad4e;
+  --dt-warning-hover: #ec971f;
+  
+  // Shadows
+  --dt-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.02);
+  --dt-shadow-md: 0 4px 15px rgba(0, 0, 0, 0.05);
+  --dt-shadow-focus: 0 0 6px rgba(26, 115, 232, 0.3);
+  
+  // Transitions
+  --dt-transition: all 0.3s ease;
+  --dt-transition-fast: all 0.2s ease;
+}
+
+// ============================================================================
+// TABLE CONTAINER
+// ============================================================================
+
+.dynamic-table-container {
+  background-color: var(--dt-bg-light);
+  border-left: 5px solid var(--dt-primary-dark);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  box-shadow: var(--dt-shadow-md);
+  animation: dtFadeIn 0.5s ease-in;
+  overflow: hidden;
+}
+
+.dynamic-table-container.bordered {
+  border: 1px solid var(--dt-border);
+}
+
+.dynamic-table-container.compact {
+  .dynamic-table th,
+  .dynamic-table td {
+    padding: 6px 8px;
+  }
+  
+  .dt-cell-input,
+  .dt-cell-select {
+    padding: 4px 6px;
+    font-size: 12px;
+  }
+}
+
+@keyframes dtFadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// ============================================================================
+// TABLE HEADER
+// ============================================================================
+
+.dynamic-table-header {
+  background: var(--dt-primary);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.dynamic-table-title {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.dynamic-table-subtitle {
+  font-size: 0.875rem;
+  opacity: 0.9;
+  margin-top: 0.25rem;
+}
+
+.dynamic-table-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+// ============================================================================
+// TABLE WRAPPER & SCROLL
+// ============================================================================
+
+.dynamic-table-wrapper {
+  padding: 1.5rem;
+  overflow-x: auto;
+  
+  // Custom scrollbar matching theme
+  &::-webkit-scrollbar {
+    height: 10px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #e2e8f0;
+    border-radius: 5px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--dt-primary) 0%, var(--dt-primary-dark) 100%);
+    border-radius: 5px;
+  }
+}
+
+// ============================================================================
+// MAIN TABLE
+// ============================================================================
+
+.dynamic-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+// Table Header Cells
+.dynamic-table th {
+  background: var(--dt-bg-header);
+  color: var(--dt-text-primary);
+  font-weight: bold;
+  padding: 10px 12px;
+  text-align: left;
+  border: 1px solid var(--dt-border);
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.dynamic-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: var(--dt-transition-fast);
+  
+  &:hover {
+    background: #c5d9ed;
+  }
+}
+
+.dt-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.dt-sort-icon {
+  font-size: 10px;
+  color: var(--dt-primary-dark);
+  margin-left: 4px;
+}
+
+.dt-required-indicator {
+  color: var(--dt-danger);
+  margin-left: 2px;
+}
+
+// Table Body Cells
+.dynamic-table td {
+  border: 1px solid var(--dt-border);
+  padding: 4px 8px;
+  background: white;
+  vertical-align: middle;
+  transition: var(--dt-transition-fast);
+}
+
+.dynamic-table tbody tr:nth-child(even) td {
+  background: var(--dt-bg-row-even);
+}
+
+.dynamic-table.hoverable tbody tr:hover td {
+  background: var(--dt-bg-row-hover);
+}
+
+.dynamic-table.striped tbody tr:nth-child(odd) td {
+  background: white;
+}
+
+.dynamic-table.striped tbody tr:nth-child(even) td {
+  background: var(--dt-bg-row-even);
+}
+
+// Cell Alignment
+.dt-cell-left { text-align: left; }
+.dt-cell-center { text-align: center; }
+.dt-cell-right { text-align: right; }
+
+// ============================================================================
+// CELL INPUT STYLES
+// ============================================================================
+
+// Base input styles
+.dt-cell-input,
+.dt-cell-select,
+.dt-cell-textarea {
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 13px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  background: white;
+  box-sizing: border-box;
+  transition: var(--dt-transition-fast);
+  font-family: 'Segoe UI', sans-serif;
+  
+  &:focus {
+    outline: none;
+    border-color: var(--dt-border-focus);
+    box-shadow: 0 0 4px rgba(26, 115, 232, 0.2);
+  }
+  
+  &:disabled,
+  &[readonly] {
+    background: #f5f5f5;
+    color: var(--dt-text-muted);
+    cursor: not-allowed;
+  }
+  
+  &.invalid {
+    border-color: var(--dt-danger);
+    
+    &:focus {
+      box-shadow: 0 0 4px rgba(217, 83, 79, 0.3);
+    }
+  }
+}
+
+// Text Input
+.dt-cell-input {
+  min-width: 80px;
+}
+
+// Number Input
+.dt-cell-input[type="number"] {
+  text-align: right;
+  
+  // Hide spin buttons
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  -moz-appearance: textfield;
+}
+
+// Select/Dropdown
+.dt-cell-select {
+  cursor: pointer;
+  min-width: 100px;
+  
+  &:not(:disabled):hover {
+    border-color: var(--dt-primary);
+  }
+}
+
+// Textarea
+.dt-cell-textarea {
+  min-height: 60px;
+  resize: vertical;
+}
+
+// ============================================================================
+// RADIO & CHECKBOX STYLES
+// ============================================================================
+
+.dt-radio-group,
+.dt-checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 4px 0;
+}
+
+.dt-radio-group.vertical,
+.dt-checkbox-group.vertical {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.dt-radio-label,
+.dt-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--dt-text-secondary);
+  cursor: pointer;
+  
+  input[type="radio"],
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: var(--dt-primary);
+  }
+  
+  &:hover {
+    color: var(--dt-primary);
+  }
+}
+
+// Single checkbox cell
+.dt-cell-checkbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--dt-primary);
+  }
+}
+
+// ============================================================================
+// DATE PICKER CELL
+// ============================================================================
+
+.dt-date-picker-cell {
+  min-width: 130px;
+  
+  .app-date-picker {
+    width: 100%;
+  }
+  
+  .date-input {
+    padding: 6px 8px;
+    padding-right: 32px;
+    font-size: 13px;
+  }
+}
+
+// ============================================================================
+// READONLY/COMPUTED CELLS
+// ============================================================================
+
+.dt-cell-readonly {
+  background: #f8f9fa;
+  color: var(--dt-text-muted);
+  padding: 6px 8px;
+  font-size: 13px;
+}
+
+.dt-cell-computed {
+  background: #fff8e6;
+  color: var(--dt-text-primary);
+  font-weight: 500;
+  padding: 6px 8px;
+  font-size: 13px;
+}
+
+// ============================================================================
+// STATUS BADGES (reusable)
+// ============================================================================
+
+.dt-status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.dt-status-live,
+.dt-status-active,
+.dt-status-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+.dt-status-pending,
+.dt-status-warning {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+}
+
+.dt-status-error,
+.dt-status-danger {
+  background: linear-gradient(135deg, var(--dt-danger) 0%, var(--dt-danger-hover) 100%);
+  color: white;
+}
+
+.dt-status-inactive,
+.dt-status-disabled {
+  background: #e2e8f0;
+  color: #64748b;
+}
+
+// ============================================================================
+// VALIDATION ERRORS
+// ============================================================================
+
+.dt-validation-error {
+  color: var(--dt-danger);
+  font-size: 11px;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dt-cell-error-highlight {
+  background-color: #fff5f5 !important;
+  border-color: var(--dt-danger) !important;
+}
+
+// Row-level error
+.dt-row-error {
+  background-color: #fff5f5 !important;
+  
+  td {
+    background-color: #fff5f5 !important;
+  }
+}
+
+// ============================================================================
+// ACTION BUTTONS
+// ============================================================================
+
+.dt-actions-cell {
+  white-space: nowrap;
+  text-align: center;
+  padding: 4px 8px;
+}
+
+.dt-action-btn {
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: var(--dt-transition-fast);
+  margin: 0 2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.dt-action-btn-primary {
+  background-color: var(--dt-primary-light);
+  color: white;
+  
+  &:hover:not(:disabled) {
+    background-color: var(--dt-primary-hover);
+  }
+}
+
+.dt-action-btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  
+  &:hover:not(:disabled) {
+    background-color: #5a6268;
+  }
+}
+
+.dt-action-btn-success {
+  background-color: var(--dt-success);
+  color: white;
+  
+  &:hover:not(:disabled) {
+    background-color: var(--dt-success-hover);
+  }
+}
+
+.dt-action-btn-danger {
+  background-color: var(--dt-danger);
+  color: white;
+  
+  &:hover:not(:disabled) {
+    background-color: var(--dt-danger-hover);
+  }
+}
+
+.dt-action-btn-warning {
+  background-color: var(--dt-warning);
+  color: white;
+  
+  &:hover:not(:disabled) {
+    background-color: var(--dt-warning-hover);
+  }
+}
+
+.dt-action-btn-icon {
+  padding: 4px;
+  min-width: 28px;
+  height: 28px;
+  justify-content: center;
+  background: transparent;
+  color: var(--dt-text-muted);
+  
+  &:hover:not(:disabled) {
+    background: var(--dt-bg-row-hover);
+    color: var(--dt-primary);
+  }
+}
+
+// ============================================================================
+// TABLE FOOTER
+// ============================================================================
+
+.dynamic-table-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: var(--dt-bg-header);
+  border-top: 1px solid var(--dt-border);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.dt-footer-info {
+  font-size: 13px;
+  color: var(--dt-text-secondary);
+}
+
+.dt-footer-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+// ============================================================================
+// HEADER ACTION BUTTONS
+// ============================================================================
+
+.dt-header-btn {
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: var(--dt-transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.dt-header-btn-add {
+  background-color: var(--dt-primary-light);
+  color: white;
+  
+  &:hover {
+    background-color: var(--dt-primary-hover);
+  }
+}
+
+.dt-header-btn-export {
+  background-color: #217346;
+  color: white;
+  
+  &:hover {
+    background-color: #1a5c38;
+  }
+}
+
+// ============================================================================
+// EMPTY STATE
+// ============================================================================
+
+.dt-empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--dt-text-muted);
+}
+
+.dt-empty-icon {
+  font-size: 3rem;
+  opacity: 0.5;
+  margin-bottom: 1rem;
+}
+
+.dt-empty-message {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.dt-empty-action {
+  margin-top: 1rem;
+}
+
+// ============================================================================
+// LOADING STATE
+// ============================================================================
+
+.dt-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  z-index: 100;
+}
+
+.dt-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e2e8f0;
+  border-top-color: var(--dt-primary);
+  border-radius: 50%;
+  animation: dtSpin 1s linear infinite;
+}
+
+@keyframes dtSpin {
+  to { transform: rotate(360deg); }
+}
+
+.dt-loading-text {
+  font-size: 14px;
+  color: var(--dt-text-muted);
+}
+
+// ============================================================================
+// RESPONSIVE STYLES
+// ============================================================================
+
+@media (max-width: 768px) {
+  .dynamic-table-container {
+    border-radius: 4px;
+    margin: 0 4px;
+  }
+  
+  .dynamic-table-header {
+    padding: 0.75rem 1rem;
+    border-radius: 4px 4px 0 0;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .dynamic-table-title {
+    font-size: 1.1rem;
+  }
+  
+  .dynamic-table-wrapper {
+    padding: 1rem;
+  }
+  
+  .dynamic-table {
+    font-size: 12px;
+  }
+  
+  .dynamic-table th,
+  .dynamic-table td {
+    padding: 6px;
+  }
+  
+  .dt-cell-input,
+  .dt-cell-select {
+    font-size: 12px;
+    padding: 4px 6px;
+  }
+  
+  .dynamic-table-footer {
+    padding: 0.75rem 1rem;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .dt-footer-actions {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+// ============================================================================
+// STACKED/CARD VIEW FOR MOBILE
+// ============================================================================
+
+.dynamic-table-stacked {
+  .dynamic-table {
+    display: block;
+  }
+  
+  .dynamic-table thead {
+    display: none;
+  }
+  
+  .dynamic-table tbody {
+    display: block;
+  }
+  
+  .dynamic-table tr {
+    display: block;
+    margin-bottom: 1rem;
+    background: white;
+    border: 1px solid var(--dt-border);
+    border-radius: 8px;
+    box-shadow: var(--dt-shadow-sm);
+    overflow: hidden;
+  }
+  
+  .dynamic-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    border: none;
+    border-bottom: 1px solid #f0f0f0;
+    
+    &:last-child {
+      border-bottom: none;
+    }
+    
+    &::before {
+      content: attr(data-label);
+      font-weight: 600;
+      color: var(--dt-text-secondary);
+      flex: 0 0 40%;
+      text-align: left;
+    }
+  }
+  
+  .dt-cell-input,
+  .dt-cell-select {
+    flex: 0 0 55%;
+    text-align: right;
+  }
+  
+  .dt-actions-cell {
+    justify-content: flex-end;
+    
+    &::before {
+      display: none;
+    }
+  }
+}
+
+// ============================================================================
+// UTILITY CLASSES
+// ============================================================================
+
+// Width utilities
+.dt-w-auto { width: auto; }
+.dt-w-25 { width: 25%; }
+.dt-w-50 { width: 50%; }
+.dt-w-75 { width: 75%; }
+.dt-w-100 { width: 100%; }
+
+// Visibility
+.dt-hidden { display: none !important; }
+.dt-visible { display: block; }
+
+// Text
+.dt-text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dt-text-wrap {
+  white-space: normal;
+  word-break: break-word;
+}
+
+// Spacing
+.dt-nowrap { white-space: nowrap; }
+

@@ -5,6 +5,7 @@ import { PrBonusRulesComponent } from './components/pr-bonus-model/pr-bonus-rule
 import { TabDemoComponent } from './components/tab-demo/tab-demo.component';
 import { DynamicFormDemoComponent } from './components/dynamic-form-demo/dynamic-form-demo.component';
 import { TierProfileDetailsComponent } from './components/tier-profile-details/tier-profile-details.component';
+import { DynamicTableDemoComponent } from './components/dynamic-table-demo/dynamic-table-demo.component';
 
 export const routes: Routes = [
   { path: '', component: DashboardComponent },
@@ -14,5 +15,6 @@ export const routes: Routes = [
   { path: 'reports', component: PrBonusRulesComponent },
   { path: 'tab-demo', component: TabDemoComponent },
   { path: 'dynamic-form-demo', component: DynamicFormDemoComponent },
-  { path: 'tier-profile-details', component: TierProfileDetailsComponent }
+  { path: 'tier-profile-details', component: TierProfileDetailsComponent },
+  { path: 'dynamic-table-demo', component: DynamicTableDemoComponent }
 ];

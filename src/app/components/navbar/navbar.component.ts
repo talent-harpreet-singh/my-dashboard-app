@@ -37,7 +37,8 @@ export class NavbarComponent implements OnInit {
       'User Settings': 'person',
       'System Settings': 'tune',
       'Tab Demo': 'tab',
-      'Dynamic Form Demo': 'dynamic_form'
+      'Dynamic Form Demo': 'dynamic_form',
+      'Dynamic Table Demo': 'table_chart'
     };
     return iconMap[menuText] || 'folder';
   }

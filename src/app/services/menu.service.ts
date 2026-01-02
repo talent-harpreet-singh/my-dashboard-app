@@ -29,6 +29,9 @@ export class MenuService {
     
     // Dynamic Form Demo
     { menuOptionNo: 8, parentMenuOptNo: 0, menuOptionTx: 'Dynamic Form Demo', slugTx: 'dynamic-form-demo' },
+    
+    // Dynamic Table Demo
+    { menuOptionNo: 10, parentMenuOptNo: 0, menuOptionTx: 'Dynamic Table Demo', slugTx: 'dynamic-table-demo' },
   ];
 
   constructor() {}
