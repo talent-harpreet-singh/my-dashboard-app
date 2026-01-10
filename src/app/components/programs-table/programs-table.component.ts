@@ -1,61 +1,222 @@
-import { Component, Input } from '@angular/core';
-import { Program } from '../../models/rule.model';
-import { FormsModule } from '@angular/forms';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DatePickerComponent } from '../common/date-picker/date-picker.component';
-import { exportTableToExcel } from '../../utils/excel-export.util';
+import { Program } from '../../models/rule.model';
+import { 
+  DynamicTableComponent, 
+  DynamicTableConfig,
+  CellChangeEvent,
+  TableActionEvent,
+  TableValidationResult
+} from '../common/dynamic-table';
 
 @Component({
   selector: 'app-programs-table',
-  templateUrl: './programs-table.component.html',
   standalone: true,
-  imports: [FormsModule, CommonModule, DatePickerComponent]
-})
-export class ProgramsTableComponent {
-  @Input() programs: Program[] = [];
-  exportFileName = 'Programs.xlsx';
-  
-  sortColumn: keyof Program | '' = '';
-  sortDirection: 'asc' | 'desc' = 'asc';
-
-  sortBy(column: keyof Program): void {
-    if (this.sortColumn === column) {
-      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-    } else {
-      this.sortColumn = column;
-      this.sortDirection = 'asc';
-    }
-
-    this.programs.sort((a, b) => {
-      const aVal = a[column];
-      const bVal = b[column];
-
-      // Handle boolean
-      if (typeof aVal === 'boolean' && typeof bVal === 'boolean') {
-        return this.sortDirection === 'asc' 
-          ? (aVal === bVal ? 0 : aVal ? 1 : -1)
-          : (aVal === bVal ? 0 : aVal ? -1 : 1);
-      }
-
-      // Handle string comparison
-      const aStr = String(aVal).toLowerCase();
-      const bStr = String(bVal).toLowerCase();
+  imports: [CommonModule, DynamicTableComponent],
+  template: `
+    <div class="programs-table-container">
+      <app-dynamic-table
+        [config]="tableConfig"
+        [data]="programsData"
+        [showValidationErrors]="true"
+        [showRecordCount]="true"
+        [newRowFactory]="createNewRow"
+        (dataChange)="onDataChange($event)"
+        (cellChange)="onCellChange($event)"
+        (actionClick)="onActionClick($event)"
+        (validationChange)="onValidationChange($event)"
+        (rowAdd)="onRowAdd($event)"
+        (rowDelete)="onRowDelete($event)"
+      ></app-dynamic-table>
       
-      if (aStr < bStr) return this.sortDirection === 'asc' ? -1 : 1;
-      if (aStr > bStr) return this.sortDirection === 'asc' ? 1 : -1;
-      return 0;
-    });
-  }
-
-  getSortIcon(column: keyof Program): string {
-    if (this.sortColumn === column) {
-      return this.sortDirection === 'asc' ? '▲' : '▼';
+      <div class="programs-button-group">
+        <button class="programs-btn programs-btn-update" (click)="updatePrograms()">
+          Update
+        </button>
+        <button class="programs-btn programs-btn-reject" (click)="rejectChanges()">
+          Reject
+        </button>
+        <button class="programs-btn programs-btn-confirm" (click)="confirmPrograms()">
+          Confirm
+        </button>
+        <button class="programs-btn programs-btn-cancel" (click)="cancelEdit()">
+          Cancel
+        </button>
+      </div>
+    </div>
+  `,
+  styles: [`
+    .programs-table-container {
+      width: 100%;
     }
-    return '';
-  }
-
-  addProgram() {
-    const newProgram: Program = {
+    
+    .programs-button-group {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+      padding: 12px 0;
+    }
+    
+    .programs-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .programs-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
+    
+    .programs-btn-update {
+      background: #1976d2;
+      color: white;
+    }
+    
+    .programs-btn-update:hover {
+      background: #1565c0;
+    }
+    
+    .programs-btn-reject {
+      background: #d32f2f;
+      color: white;
+    }
+    
+    .programs-btn-reject:hover {
+      background: #c62828;
+    }
+    
+    .programs-btn-confirm {
+      background: #388e3c;
+      color: white;
+    }
+    
+    .programs-btn-confirm:hover {
+      background: #2e7d32;
+    }
+    
+    .programs-btn-cancel {
+      background: #757575;
+      color: white;
+    }
+    
+    .programs-btn-cancel:hover {
+      background: #616161;
+    }
+  `]
+})
+export class ProgramsTableComponent implements OnChanges {
+  @Input() programs: Program[] = [];
+  
+  @Output() programsChange = new EventEmitter<Program[]>();
+  @Output() update = new EventEmitter<void>();
+  @Output() reject = new EventEmitter<void>();
+  @Output() confirm = new EventEmitter<void>();
+  @Output() cancel = new EventEmitter<void>();
+  
+  programsData: Program[] = [];
+  validationResult: TableValidationResult | null = null;
+  
+  // Table configuration
+  tableConfig: DynamicTableConfig = {
+    title: 'Programs Attached to This Promo',
+    
+    // Enable features
+    allowAdd: true,
+    allowDelete: true,
+    sortable: true,
+    exportable: true,
+    striped: true,
+    hoverable: true,
+    bordered: true,
+    
+    // Export settings
+    exportFileName: 'Programs.xlsx',
+    
+    // Empty state
+    emptyMessage: 'No programs attached. Click "Add" to create one.',
+    
+    // Column definitions
+    columns: [
+      {
+        key: 'programNumber',
+        label: 'Program Number',
+        type: 'text',
+        width: '130px',
+        placeholder: 'Enter program #',
+        sortable: true
+      },
+      {
+        key: 'legacyCode',
+        label: 'Legacy Code',
+        type: 'text',
+        width: '120px',
+        placeholder: 'Enter code',
+        sortable: true
+      },
+      {
+        key: 'description',
+        label: 'Description',
+        type: 'text',
+        width: '200px',
+        placeholder: 'Enter description',
+        sortable: true
+      },
+      {
+        key: 'startDate',
+        label: 'Start Dt',
+        type: 'date',
+        width: '130px',
+        sortable: true
+      },
+      {
+        key: 'endDate',
+        label: 'End Dt',
+        type: 'date',
+        width: '130px',
+        sortable: true
+      },
+      {
+        key: 'status',
+        label: 'Status',
+        type: 'readonly',
+        width: '100px',
+        align: 'center',
+        sortable: true
+      },
+      {
+        key: 'userId',
+        label: 'User Id',
+        type: 'readonly',
+        width: '100px',
+        align: 'center',
+        sortable: true
+      },
+      {
+        key: 'lastUpdated',
+        label: 'Last Updated',
+        type: 'readonly',
+        width: '150px',
+        sortable: true
+      },
+      {
+        key: 'delete',
+        label: 'Check To Delete',
+        type: 'checkbox',
+        width: '120px',
+        align: 'center',
+        sortable: true
+      }
+    ]
+  };
+  
+  // Factory for creating new rows
+  createNewRow = (): Program => {
+    return {
       programNumber: '',
       legacyCode: '',
       description: '',
@@ -66,26 +227,61 @@ export class ProgramsTableComponent {
       lastUpdated: new Date().toLocaleString(),
       delete: false
     };
-    this.programs.push(newProgram);
+  };
+  
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['programs']) {
+      this.programsData = [...this.programs];
+    }
   }
-
-  updatePrograms() {
+  
+  // Event handlers
+  onDataChange(data: any[]): void {
+    this.programsData = data;
+    this.programsChange.emit(data as Program[]);
+  }
+  
+  onCellChange(event: CellChangeEvent): void {
+    // Update lastUpdated timestamp when any cell changes
+    if (event.key !== 'lastUpdated') {
+      event.row.lastUpdated = new Date().toLocaleString();
+    }
+  }
+  
+  onActionClick(event: TableActionEvent): void {
+    console.log('Action clicked:', event);
+  }
+  
+  onValidationChange(result: TableValidationResult): void {
+    this.validationResult = result;
+  }
+  
+  onRowAdd(event: { row: any; index: number }): void {
+    console.log('Row added:', event);
+  }
+  
+  onRowDelete(event: { row: any; index: number }): void {
+    console.log('Row deleted:', event);
+  }
+  
+  // Button actions
+  updatePrograms(): void {
+    this.update.emit();
     alert('Programs updated (locally).');
   }
-
-  rejectChanges() {
+  
+  rejectChanges(): void {
+    this.reject.emit();
     alert('Rejected changes (reset not implemented).');
   }
-
-  confirmPrograms() {
+  
+  confirmPrograms(): void {
+    this.confirm.emit();
     alert('Programs confirmed!');
   }
-
-  cancelEdit() {
+  
+  cancelEdit(): void {
+    this.cancel.emit();
     alert('Canceled edits (UI only).');
-  }
-
-  exportToExcel(): void {
-    exportTableToExcel('programsTable', this.exportFileName, 'Programs');
   }
 }
