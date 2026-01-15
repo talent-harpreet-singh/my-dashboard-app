@@ -32,6 +32,12 @@ export class MenuService {
     
     // Dynamic Table Demo
     { menuOptionNo: 10, parentMenuOptNo: 0, menuOptionTx: 'Dynamic Table Demo', slugTx: 'dynamic-table-demo' },
+    
+    // Merchant Match
+    { menuOptionNo: 11, parentMenuOptNo: 0, menuOptionTx: 'Merchant Match', slugTx: 'merchant-match' },
+    
+    // Statement Credit
+    { menuOptionNo: 12, parentMenuOptNo: 0, menuOptionTx: 'Statement Credit', slugTx: 'statement-credit' },
   ];
 
   constructor() {}

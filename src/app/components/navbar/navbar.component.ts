@@ -38,7 +38,9 @@ export class NavbarComponent implements OnInit {
       'System Settings': 'tune',
       'Tab Demo': 'tab',
       'Dynamic Form Demo': 'dynamic_form',
-      'Dynamic Table Demo': 'table_chart'
+      'Dynamic Table Demo': 'table_chart',
+      'Merchant Match': 'store',
+      'Statement Credit': 'credit_card'
     };
     return iconMap[menuText] || 'folder';
   }
