@@ -1,5 +1,6 @@
 import { Component, ElementRef, Input, Output, EventEmitter, ViewChild, OnInit, OnChanges, OnDestroy, HostListener, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { SimpleTableConfig } from '../../models/table.model';
@@ -7,7 +8,7 @@ import { SimpleTableConfig } from '../../models/table.model';
 @Component({
   selector: 'app-simple-table',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule],
+  imports: [CommonModule, FormsModule, MatIconModule, MatButtonModule],
   template: `
     <div class="table-container" #tableContainer>
       <div class="table-header" *ngIf="config.title">
@@ -18,15 +19,23 @@ import { SimpleTableConfig } from '../../models/table.model';
               Showing {{ displayedData.length }} of {{ totalRecords }} records
             </div>
           </div>
-          <button *ngIf="showExportButton" 
-                  class="export-btn" 
-                  [class.exporting]="isExporting"
-                  [disabled]="isExporting"
-                  (click)="onExportClick()">
-            <mat-icon *ngIf="!isExporting">file_download</mat-icon>
-            <mat-icon *ngIf="isExporting" class="spinning">hourglass_empty</mat-icon>
-            <span>{{ isExporting ? 'Exporting...' : 'Export to Excel' }}</span>
-          </button>
+          <div class="header-buttons">
+            <button *ngIf="showAddRowButton" 
+                    class="add-row-btn" 
+                    (click)="onAddRowClick()">
+              <mat-icon>add</mat-icon>
+              <span>Add Row</span>
+            </button>
+            <button *ngIf="showExportButton" 
+                    class="export-btn" 
+                    [class.exporting]="isExporting"
+                    [disabled]="isExporting"
+                    (click)="onExportClick()">
+              <mat-icon *ngIf="!isExporting">file_download</mat-icon>
+              <mat-icon *ngIf="isExporting" class="spinning">hourglass_empty</mat-icon>
+              <span>{{ isExporting ? 'Exporting...' : 'Export to Excel' }}</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -70,16 +79,53 @@ import { SimpleTableConfig } from '../../models/table.model';
                   [style.animation-delay]="(rowIndex * 50) + 'ms'">
                 <td *ngFor="let column of config.columns"
                     class="table-cell"
-                    [class.status-cell]="column.key === 'status'">
-                  <span *ngIf="column.key === 'status'"
+                    [class.status-cell]="column.key === 'status'"
+                    [class.clickable-cell]="column.clickable"
+                    [class.editable-cell]="row._isNew">
+                  <span *ngIf="column.key === 'status' && !row._isNew"
                         class="status-badge"
                         [class.status-live]="row[column.key] === 'Live'"
                         [class.status-pending]="row[column.key] === 'P'">
                     {{ row[column.key] }}
                   </span>
-                  <span *ngIf="column.key !== 'status'">
+                  <select *ngIf="column.key === 'status' && row._isNew"
+                          class="editable-input"
+                          [(ngModel)]="row[column.key]"
+                          (ngModelChange)="onCellEdit(row, column.key, $event)">
+                    <option value="Live">Live</option>
+                    <option value="P">Pending</option>
+                    <option value="Inactive">Inactive</option>
+                  </select>
+                  <span *ngIf="column.key !== 'status' && !column.clickable && !row._isNew">
                     {{ row[column.key] }}
                   </span>
+                  <input *ngIf="column.key !== 'status' && !column.clickable && row._isNew && column.key !== 'lastUpdateDate' && column.key !== 'lob'"
+                         type="text"
+                         class="editable-input"
+                         [(ngModel)]="row[column.key]"
+                         (ngModelChange)="onCellEdit(row, column.key, $event)"
+                         [placeholder]="'Enter ' + column.header">
+                  <input *ngIf="column.key === 'lob' && row._isNew"
+                         type="number"
+                         class="editable-input"
+                         [(ngModel)]="row[column.key]"
+                         (ngModelChange)="onCellEdit(row, column.key, $event)"
+                         [placeholder]="'Enter ' + column.header">
+                  <span *ngIf="column.key === 'lastUpdateDate' && row._isNew" class="new-row-date">
+                    {{ getCurrentDate() }}
+                  </span>
+                  <a *ngIf="column.key !== 'status' && column.clickable && !row._isNew"
+                     class="clickable-link"
+                     (click)="onCellClick(column, row, $event)"
+                     [title]="'Click to view details'">
+                    {{ row[column.key] }}
+                  </a>
+                  <input *ngIf="column.key !== 'status' && column.clickable && row._isNew"
+                         type="text"
+                         class="editable-input"
+                         [(ngModel)]="row[column.key]"
+                         (ngModelChange)="onCellEdit(row, column.key, $event)"
+                         [placeholder]="'Enter ' + column.header">
                 </td>
               </tr>
             </tbody>
@@ -97,6 +143,19 @@ import { SimpleTableConfig } from '../../models/table.model';
         <div class="empty-state">
           <div class="empty-icon">📊</div>
           <p>No data available</p>
+        </div>
+      </div>
+
+      <!-- Save Button Footer -->
+      <div class="save-footer" *ngIf="showSaveButton && hasNewRows">
+        <div class="save-footer-content">
+          <span class="save-info">You have unsaved changes</span>
+          <div class="save-actions">
+            <button class="save-btn" (click)="onSaveClick()">
+              <mat-icon>save</mat-icon>
+              <span>Save</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -169,6 +228,48 @@ import { SimpleTableConfig } from '../../models/table.model';
       position: relative;
       z-index: 1;
       gap: 1rem;
+    }
+
+    .header-buttons {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .add-row-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1.25rem;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      position: relative;
+      z-index: 2;
+    }
+
+    .add-row-btn:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .add-row-btn:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .add-row-btn mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
     }
 
     .table-title-section {
@@ -442,6 +543,105 @@ import { SimpleTableConfig } from '../../models/table.model';
       background: rgba(102, 126, 234, 0.05);
     }
 
+    .clickable-cell {
+      cursor: pointer;
+    }
+
+    .clickable-link {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      display: inline-block;
+    }
+
+    .clickable-link:hover {
+      color: #5568d3;
+      text-decoration: underline;
+      transform: translateX(2px);
+    }
+
+    .editable-cell {
+      position: relative;
+    }
+
+    .editable-input {
+      width: 100%;
+      padding: 0.5rem;
+      border: 2px solid #667eea;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      background: white;
+      transition: all 0.2s ease;
+    }
+
+    .editable-input:focus {
+      outline: none;
+      border-color: #5568d3;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .new-row-date {
+      color: #64748b;
+      font-style: italic;
+      font-size: 0.875rem;
+    }
+
+    .save-footer {
+      background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+      border-top: 2px solid #cbd5e1;
+      padding: 1rem 2rem;
+      flex-shrink: 0;
+    }
+
+    .save-footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 100%;
+    }
+
+    .save-info {
+      color: #475569;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .save-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .save-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1.5rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .save-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+    }
+
+    .save-btn:active {
+      transform: translateY(0);
+    }
+
+    .save-btn mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
     .status-cell {
       text-align: center;
     }
@@ -616,7 +816,12 @@ export class SimpleTableComponent implements OnInit, OnChanges, OnDestroy {
   @Input() tableId: string = ''; // Optional table ID for export functionality
   @Input() showExportButton: boolean = false; // Show export button in header
   @Input() isExporting: boolean = false; // Loading state for export
+  @Input() showAddRowButton: boolean = false; // Show add row button in header
+  @Input() showSaveButton: boolean = false; // Show save button at bottom
   @Output() exportClick = new EventEmitter<string>(); // Emit tableId when export is clicked
+  @Output() cellClick = new EventEmitter<{ column: string; row: any }>(); // Emit when clickable cell is clicked
+  @Output() addRowClick = new EventEmitter<void>(); // Emit when add row button is clicked
+  @Output() saveClick = new EventEmitter<any[]>(); // Emit all data when save is clicked
 
   @ViewChild('tableContainer') tableContainer!: ElementRef;
   @ViewChild('tableWrapper') tableWrapper!: ElementRef;
@@ -632,6 +837,10 @@ export class SimpleTableComponent implements OnInit, OnChanges, OnDestroy {
   sortedIconVisible = false;
   private sortedIconTimer: any = null;
   allData: any[] = [];
+
+  get hasNewRows(): boolean {
+    return this.allData.some(row => row._isNew);
+  }
 
   ngOnInit() {
     this.allData = [...this.data];
@@ -763,6 +972,47 @@ export class SimpleTableComponent implements OnInit, OnChanges, OnDestroy {
     if (this.tableId) {
       this.exportClick.emit(this.tableId);
     }
+  }
+
+  onCellClick(column: any, row: any, event: Event): void {
+    event.preventDefault();
+    if (column.clickHandler) {
+      column.clickHandler(row);
+    } else {
+      this.cellClick.emit({ column: column.key, row });
+    }
+  }
+
+  onAddRowClick(): void {
+    this.addRowClick.emit();
+  }
+
+  onCellEdit(row: any, columnKey: string, value: any): void {
+    row[columnKey] = value;
+    // Mark row as modified
+    row._isModified = true;
+  }
+
+  onSaveClick(): void {
+    // Get all data including new rows
+    const dataToSave = this.allData.map(row => {
+      const { _isNew, _isModified, ...cleanRow } = row;
+      return cleanRow;
+    });
+    this.saveClick.emit(dataToSave);
+  }
+
+  getCurrentDate(): string {
+    const now = new Date();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const year = now.getFullYear();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
+    const displayHours = now.getHours() % 12 || 12;
+    return `${month}-${day}-${year} ${displayHours}:${minutes}:${seconds} ${ampm}`;
   }
 
   onScroll() {
