@@ -10,4 +10,8 @@ import { CommonModule } from "@angular/common";
 })
 export class RuleDetailsComponent {
   @Input() details!: RuleDetails;
+
+  hasDetails(): boolean {
+    return !!(this.details?.lastUpdatedDate || this.details?.status || this.details?.userId);
+  }
 }

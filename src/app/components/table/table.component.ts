@@ -70,16 +70,23 @@ import { SimpleTableConfig } from '../../models/table.model';
                   [style.animation-delay]="(rowIndex * 50) + 'ms'">
                 <td *ngFor="let column of config.columns"
                     class="table-cell"
-                    [class.status-cell]="column.key === 'status'">
+                    [class.status-cell]="column.key === 'status'"
+                    [class.clickable-cell]="column.clickable">
                   <span *ngIf="column.key === 'status'"
                         class="status-badge"
                         [class.status-live]="row[column.key] === 'Live'"
                         [class.status-pending]="row[column.key] === 'P'">
                     {{ row[column.key] }}
                   </span>
-                  <span *ngIf="column.key !== 'status'">
+                  <span *ngIf="column.key !== 'status' && !column.clickable">
                     {{ row[column.key] }}
                   </span>
+                  <a *ngIf="column.key !== 'status' && column.clickable"
+                     class="clickable-link"
+                     (click)="onCellClick(column, row, $event)"
+                     [title]="'Click to view details'">
+                    {{ row[column.key] }}
+                  </a>
                 </td>
               </tr>
             </tbody>
@@ -442,6 +449,24 @@ import { SimpleTableConfig } from '../../models/table.model';
       background: rgba(102, 126, 234, 0.05);
     }
 
+    .clickable-cell {
+      cursor: pointer;
+    }
+
+    .clickable-link {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      display: inline-block;
+    }
+
+    .clickable-link:hover {
+      color: #5568d3;
+      text-decoration: underline;
+      transform: translateX(2px);
+    }
+
     .status-cell {
       text-align: center;
     }
@@ -617,6 +642,7 @@ export class SimpleTableComponent implements OnInit, OnChanges, OnDestroy {
   @Input() showExportButton: boolean = false; // Show export button in header
   @Input() isExporting: boolean = false; // Loading state for export
   @Output() exportClick = new EventEmitter<string>(); // Emit tableId when export is clicked
+  @Output() cellClick = new EventEmitter<{ column: string; row: any }>(); // Emit when clickable cell is clicked
 
   @ViewChild('tableContainer') tableContainer!: ElementRef;
   @ViewChild('tableWrapper') tableWrapper!: ElementRef;
@@ -763,6 +789,11 @@ export class SimpleTableComponent implements OnInit, OnChanges, OnDestroy {
     if (this.tableId) {
       this.exportClick.emit(this.tableId);
     }
+  }
+
+  onCellClick(column: any, row: any, event: Event): void {
+    event.preventDefault();
+    this.cellClick.emit({ column: column.key, row });
   }
 
   onScroll() {

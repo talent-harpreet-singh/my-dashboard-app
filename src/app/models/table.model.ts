@@ -6,7 +6,7 @@ export interface SimpleTableColumn {
   header: string;
   width?: string;
   sortable?: boolean;
-}
+  clickable?: boolean; 
 
 export interface SimpleTableConfig {
   title?: string;

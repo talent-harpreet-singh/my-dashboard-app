@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { DataService } from '../../services/data.service';
 import { RuleDetails, Program, Note } from '../../models/rule.model';
 import { DynamicFormComponent } from '../common/dynamic-form/dynamic-form.component';
@@ -107,25 +108,97 @@ export class RuleEditorComponent implements OnInit {
     }
   ];
 
-  constructor(private dataService: DataService) {}
+  constructor(
+    private dataService: DataService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      this.ruleDetails = parsed.ruleDetails;
-      this.programs = parsed.programs;
-      this.notes = parsed.notes;
+    // Check if data was passed via route state (from PR Bonus Rules table)
+    const navigation = this.router.getCurrentNavigation();
+    const rowData = navigation?.extras?.state;
+
+    if (rowData && rowData['promoId']) {
+      // Pre-fill form with data from clicked row
+      this.initializeWithRowData(rowData);
     } else {
-      this.ruleDetails = this.dataService.getRuleDetails();
-      this.programs = this.dataService.getPrograms();
-      this.notes = this.dataService.getNotes();
+      // Check query params to see if it's a new rule
+      const route = this.route.snapshot;
+      const isNewRule = route.queryParams['new'] === 'true';
+      
+      if (isNewRule) {
+        // Initialize with empty data for new rule
+        this.initializeEmptyRule();
+      } else {
+        // Load from localStorage or use default data
+        const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          this.ruleDetails = parsed.ruleDetails;
+          this.programs = parsed.programs;
+          this.notes = parsed.notes;
+        } else {
+          this.ruleDetails = this.dataService.getRuleDetails();
+          this.programs = this.dataService.getPrograms();
+          this.notes = this.dataService.getNotes();
+        }
+      }
     }
     
     // Set default value for readonly reportingGroup field
     if (!this.ruleDetails.reportingGroup) {
       this.ruleDetails.reportingGroup = '6';
     }
+  }
+
+  private initializeEmptyRule(): void {
+    // Initialize with empty/default values (no Last Updated, Status, User ID)
+    this.ruleDetails = {
+      lastUpdatedDate: '',
+      status: '',
+      userId: '',
+      displayName: '',
+      earnPrefix: '',
+      lob: '',
+      tierGroup: '',
+      merchantEligibility: '',
+      expenseCode: '',
+      bonusType: '',
+      tierProfile: '',
+      reportingGroup: '6',
+      statementReportLineNo: 0
+    };
+
+    // Initialize with empty arrays
+    this.programs = [];
+    this.notes = [];
+  }
+
+  private initializeWithRowData(rowData: any): void {
+    const defaultRuleDetails = this.dataService.getRuleDetails();
+    
+    this.ruleDetails = {
+      ...defaultRuleDetails,
+      displayName: rowData.displayName || '',
+      lastUpdatedDate: rowData.lastUpdateDate || '',
+      status: rowData.status || '',
+      userId: rowData.userId || '',
+      // Convert LOB from number to string (1 = Consumer, other = Commercial)
+      lob: rowData.lob === 1 ? 'Consumer' : (rowData.lob ? 'Commercial' : ''),
+      // Other fields remain empty/default
+      earnPrefix: '',
+      tierGroup: '',
+      merchantEligibility: '',
+      expenseCode: '',
+      bonusType: '',
+      tierProfile: '',
+      reportingGroup: '6',
+      statementReportLineNo: 0
+    };
+
+    this.programs = this.dataService.getPrograms();
+    this.notes = this.dataService.getNotes();
   }
 
   onFieldChange(event: { key: string; value: any }) {
