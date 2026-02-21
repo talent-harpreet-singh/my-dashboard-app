@@ -1,0 +1,392 @@
+
+$primary-blue: #1a4da0;
+$primary-blue-dark: #003c74;
+$primary-blue-light: #0073e6;
+$primary-blue-hover: #005bb5;
+$bg-light-blue: #e6f3ff;
+$bg-header: #d9e6f2;
+$bg-row-even: #f8fbff;
+$bg-row-hover: #f2f7ff;
+$bg-white: #ffffff;
+$text-primary: #002041;
+$text-secondary: #003366;
+$text-muted: #666;
+$border-color: #ccc;
+$border-light: #b8d4e8;
+$border-focus: #1a73e8;
+$shadow-md: 0 4px 15px rgba(0, 0, 0, 0.05);
+$shadow-focus: 0 0 6px rgba(26, 115, 232, 0.3);
+
+.search-form-container {
+  background-color: $bg-light-blue;
+  border-left: 5px solid $primary-blue-dark;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 1400px;
+  margin: 0 auto;
+  box-shadow: $shadow-md;
+  animation: fadeIn 0.5s ease-in;
+  overflow: hidden;
+}
+
+.search-form-header {
+  background: $primary-blue;
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 8px 8px 0 0;
+}
+
+.search-form-title {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.search-form-subtitle {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.search-form-content {
+  padding: 2rem;
+  background-color: $bg-light-blue;
+}
+
+.full-width-fields {
+  margin-bottom: 2rem;
+  width: 100%;
+  
+  .search-form-field {
+    width: 100%;
+  }
+}
+
+.search-form-grid {
+  display: grid;
+  gap: 2rem;
+  margin-bottom: 2rem;
+
+  &.columns-1 {
+    grid-template-columns: 1fr;
+  }
+
+  &.columns-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  &.columns-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  &.columns-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.search-form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field-label {
+  font-weight: 600;
+  color: $text-secondary;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.field-input,
+.field-select {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+  border: 1px solid $border-color;
+  border-radius: 4px;
+  background-color: $bg-white;
+  transition: all 0.3s ease;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  width: 100%;
+  box-sizing: border-box;
+
+  &:focus {
+    border-color: $border-focus;
+    box-shadow: $shadow-focus;
+    outline: none;
+  }
+
+  &:hover {
+    border-color: $primary-blue-light;
+    background-color: $bg-white;
+  }
+}
+
+.field-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23002041' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2.5rem;
+}
+
+.field-group-range {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 1rem;
+  width: 100%;
+  
+  .field-label {
+    flex: 0 0 auto;
+    min-width: 120px;
+    margin-bottom: 0;
+    padding-top: 0.5rem;
+  }
+  
+  .range-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    flex: 1 1 auto;
+  }
+
+  .field-select-range {
+    flex: 0 0 auto;
+    min-width: 70px;
+    max-width: 90px;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .field-input-range {
+    flex: 0 1 auto;
+    min-width: 80px;
+    max-width: 80px;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .range-separator {
+    font-weight: 600;
+    color: $text-secondary;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    margin: 0 0.25rem;
+    
+    .bracket {
+      font-size: 0.65rem;
+      font-weight: 300;
+      color: $text-secondary;
+      opacity: 0.6;
+      line-height: 1;
+    }
+  }
+}
+
+.search-form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-start;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid $border-light;
+}
+
+.btn {
+  padding: 0.65rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-width: 100px;
+
+  &:focus {
+    outline: none;
+    box-shadow: $shadow-focus;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.btn-find {
+  background-color: $primary-blue;
+  color: white;
+
+  &:hover {
+    background-color: $primary-blue-hover;
+  }
+
+  &:active {
+    background-color: $primary-blue-dark;
+  }
+}
+
+.btn-reset {
+  background-color: $bg-white;
+  color: $text-primary;
+  border: 1px solid $border-color;
+
+  &:hover {
+    background-color: $bg-row-hover;
+    border-color: $primary-blue-light;
+    color: $text-secondary;
+  }
+
+  &:active {
+    background-color: $bg-row-even;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1400px) {
+  .search-form-container {
+    width: 90%;
+  }
+}
+
+@media (max-width: 1200px) {
+  .search-form-container {
+    width: 95%;
+  }
+
+  .search-form-grid {
+    &.columns-4 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .search-form-container {
+    width: 95%;
+  }
+
+  .search-form-grid {
+    &.columns-3,
+    &.columns-4 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .search-form-container {
+    width: 100%;
+    border-radius: 0;
+    border-left: none;
+  }
+
+  .search-form-content {
+    padding: 1.5rem;
+  }
+
+  .search-form-grid {
+    gap: 1.5rem;
+
+    &.columns-2,
+    &.columns-3,
+    &.columns-4 {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .search-form-actions {
+    flex-direction: column;
+
+    .btn {
+      width: 100%;
+    }
+  }
+
+  .field-group-range {
+    .range-container {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .field-select-range,
+    .field-input-range {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .range-separator {
+      text-align: center;
+      padding: 0.25rem 0;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .search-form-header {
+    padding: 0.875rem 1.25rem;
+  }
+
+  .search-form-title {
+    font-size: 1.1rem;
+  }
+
+  .search-form-content {
+    padding: 1.25rem;
+  }
+
+  .field-label {
+    font-size: 0.9rem;
+  }
+
+  .field-input,
+  .field-select {
+    font-size: 0.9rem;
+    padding: 0.45rem 0.65rem;
+  }
+}
+
+// ===========================================
+// Notes Section Wrapper
+// ===========================================
+.notes-wrapper {
+  width: 80%;
+  max-width: 1400px;
+  margin: 2rem auto 0;
+  animation: fadeIn 0.5s ease-in;
+
+  @media (max-width: 1400px) {
+    width: 90%;
+  }
+
+  @media (max-width: 1200px) {
+    width: 95%;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    margin: 1rem auto 0;
+  }
+}

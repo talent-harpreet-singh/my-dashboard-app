@@ -40,7 +40,8 @@ export class NavbarComponent implements OnInit {
       'Dynamic Form Demo': 'dynamic_form',
       'Dynamic Table Demo': 'table_chart',
       'Merchant Match': 'store',
-      'Statement Credit': 'credit_card'
+      'Statement Credit': 'credit_card',
+      'Search Form Demo': 'search'
     };
     return iconMap[menuText] || 'folder';
   }

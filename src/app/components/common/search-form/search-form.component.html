@@ -1,0 +1,95 @@
+<div class="search-form-container">
+  <div class="search-form-header">
+    <div class="search-form-title">{{ config.title }}</div>
+    <div class="search-form-subtitle" *ngIf="config.subtitle">{{ config.subtitle }}</div>
+  </div>
+
+  <div class="search-form-content">
+    <!-- Full-width fields (Range fields) -->
+    <div class="full-width-fields" *ngIf="fullWidthFields.length > 0">
+      <div class="search-form-field" *ngFor="let field of fullWidthFields">
+        <div class="field-group field-group-range">
+          <label class="field-label">{{ field.label }}:</label>
+          <div class="range-container">
+            <select
+              *ngIf="field.options && field.options.length > 0"
+              class="field-select field-select-range"
+              [value]="getFieldValue(field, 'prefix')"
+              (change)="setFieldValue(field, $any($event.target).value, 'prefix')"
+            >
+              <option *ngFor="let option of field.options" [value]="option.value">
+                {{ option.label }}
+              </option>
+            </select>
+            <input
+              type="text"
+              class="field-input field-input-range"
+              [placeholder]="field.placeholder || ''"
+              [value]="getFieldValue(field, 'from')"
+              (input)="setFieldValue(field, $any($event.target).value, 'from')"
+            />
+            <span class="range-separator"><span class="bracket">(</span>To<span class="bracket">)</span></span>
+            <input
+              type="text"
+              class="field-input field-input-range"
+              [placeholder]="field.placeholder || ''"
+              [value]="getFieldValue(field, 'to')"
+              (input)="setFieldValue(field, $any($event.target).value, 'to')"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Regular fields in grid -->
+    <div class="search-form-grid" [class]="'columns-' + columns.length" *ngIf="columns.length > 0">
+      <div class="search-form-column" *ngFor="let column of columns">
+        <div class="search-form-field" *ngFor="let field of column">
+          <!-- Text Input -->
+          <div class="field-group" *ngIf="field.type === 'text'">
+            <label class="field-label">{{ field.label }}:</label>
+            <input
+              type="text"
+              class="field-input"
+              [placeholder]="field.placeholder || ''"
+              [value]="getFieldValue(field)"
+              (input)="setFieldValue(field, $any($event.target).value)"
+            />
+          </div>
+
+          <!-- Select Dropdown -->
+          <div class="field-group" *ngIf="field.type === 'select'">
+            <label class="field-label">{{ field.label }}:</label>
+            <select
+              class="field-select"
+              [value]="getFieldValue(field)"
+              (change)="setFieldValue(field, $any($event.target).value)"
+            >
+              <option *ngFor="let option of field.options" [value]="option.value">
+                {{ option.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="search-form-actions">
+      <button type="button" class="btn btn-find" (click)="onSearch()">
+        {{ config.buttonLabels?.find || 'Find' }}
+      </button>
+      <button type="button" class="btn btn-reset" (click)="onReset()">
+        {{ config.buttonLabels?.reset || 'Reset' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Notes Section - Shows below search form when Find is clicked -->
+<div class="notes-wrapper" *ngIf="showNotes">
+  <app-notes-section
+    [notes]="notes"
+    [showDelete]="true"
+    (noteAdded)="onNoteAdded()"
+  ></app-notes-section>
+</div>

@@ -38,6 +38,9 @@ export class MenuService {
     
     // Statement Credit
     { menuOptionNo: 12, parentMenuOptNo: 0, menuOptionTx: 'Statement Credit', slugTx: 'statement-credit' },
+    
+    // Search Form Demo
+    { menuOptionNo: 13, parentMenuOptNo: 0, menuOptionTx: 'Search Form Demo', slugTx: 'search-form-demo' },
   ];
 
   constructor() {}

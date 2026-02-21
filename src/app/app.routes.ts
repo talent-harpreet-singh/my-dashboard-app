@@ -8,6 +8,7 @@ import { TierProfileDetailsComponent } from './components/tier-profile-details/t
 import { DynamicTableDemoComponent } from './components/dynamic-table-demo/dynamic-table-demo.component';
 import { MerchantMatchDemoComponent } from './components/merchant-match-demo/merchant-match-demo.component';
 import { StatementCreditDemoComponent } from './components/statement-credit-demo/statement-credit-demo.component';
+import { SearchFormDemoComponent } from './components/search-form-demo/search-form-demo.component';
 
 export const routes: Routes = [
   { path: '', component: DashboardComponent },
@@ -20,5 +21,6 @@ export const routes: Routes = [
   { path: 'tier-profile-details', component: TierProfileDetailsComponent },
   { path: 'dynamic-table-demo', component: DynamicTableDemoComponent },
   { path: 'merchant-match', component: MerchantMatchDemoComponent },
-  { path: 'statement-credit', component: StatementCreditDemoComponent }
+  { path: 'statement-credit', component: StatementCreditDemoComponent },
+  { path: 'search-form-demo', component: SearchFormDemoComponent }
 ];
