@@ -32,7 +32,7 @@ import { SearchFormConfig } from '../../models/search-form.model';
   `,
   styles: [`
     .demo-container {
-      width: 88rem;
+      width: 95rem;
       max-width: 100%;
       min-height: 100vh;
       margin: 0;
