@@ -67,7 +67,9 @@ import { SimpleTableConfig } from '../../models/table.model';
                   class="table-row"
                   [class.status-live-row]="row['status'] === 'Live'"
                   [class.status-pending-row]="row['status'] === 'P'"
-                  [style.animation-delay]="(rowIndex * 50) + 'ms'">
+                  [class.clickable-row]="rowClickable"
+                  [style.animation-delay]="(rowIndex * 50) + 'ms'"
+                  (click)="onRowClick(row, $event)">
                 <td *ngFor="let column of config.columns"
                     class="table-cell"
                     [class.status-cell]="column.key === 'status'"
@@ -453,6 +455,16 @@ import { SimpleTableConfig } from '../../models/table.model';
       cursor: pointer;
     }
 
+    .clickable-row {
+      cursor: pointer;
+    }
+
+    .clickable-row:hover {
+      background: rgba(102, 126, 234, 0.1) !important;
+      transform: scale(1.01);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
     .clickable-link {
       color: #667eea;
       text-decoration: none;
@@ -641,8 +653,10 @@ export class SimpleTableComponent implements OnInit, OnChanges, OnDestroy {
   @Input() tableId: string = ''; // Optional table ID for export functionality
   @Input() showExportButton: boolean = false; // Show export button in header
   @Input() isExporting: boolean = false; // Loading state for export
+  @Input() rowClickable: boolean = false; // Enable row click functionality
   @Output() exportClick = new EventEmitter<string>(); // Emit tableId when export is clicked
   @Output() cellClick = new EventEmitter<{ column: string; row: any }>(); // Emit when clickable cell is clicked
+  @Output() rowClick = new EventEmitter<{ row: any }>(); // Emit when row is clicked
 
   @ViewChild('tableContainer') tableContainer!: ElementRef;
   @ViewChild('tableWrapper') tableWrapper!: ElementRef;
@@ -793,7 +807,15 @@ export class SimpleTableComponent implements OnInit, OnChanges, OnDestroy {
 
   onCellClick(column: any, row: any, event: Event): void {
     event.preventDefault();
+    event.stopPropagation(); // Prevent row click when cell is clicked
     this.cellClick.emit({ column: column.key, row });
+  }
+
+  onRowClick(row: any, event: Event): void {
+    if (this.rowClickable) {
+      event.preventDefault();
+      this.rowClick.emit({ row });
+    }
   }
 
   onScroll() {

@@ -18,8 +18,9 @@ import { exportTableToExcel } from '../../utils/excel-export.util';
         [batchSize]="batchSize"
         [tableId]="'prBonusRulesTable'"
         [showExportButton]="true"
+        [rowClickable]="true"
         (exportClick)="exportToExcel($event)"
-        (cellClick)="onPromoIdClick($event)"
+        (rowClick)="onRowClick($event)"
       ></app-simple-table>
       <div class="action-footer">
         <button class="new-rule-btn" (click)="onNewRuleClick()">
@@ -81,7 +82,7 @@ export class PrBonusRulesComponent {
   tableConfig = {
     title: 'PR Bonus Rules',
     columns: [
-      { key: 'promoId', header: 'Promo Id', width: '120px', sortable: true, clickable: true },
+      { key: 'promoId', header: 'Promo Id', width: '120px', sortable: true },
       { key: 'lob', header: 'LOB', width: '80px', sortable: true },
       { key: 'displayName', header: 'Display Name', sortable: true },
       { key: 'status', header: 'Status', width: '100px', sortable: true },
@@ -305,13 +306,11 @@ export class PrBonusRulesComponent {
     exportTableToExcel(tableId, this.exportFileName, 'PR Bonus Rules');
   }
 
-  onPromoIdClick(event: { column: string; row: any }): void {
-    if (event.column === 'promoId') {
-      // Navigate to rule-editor with row data
-      this.router.navigate(['/rule-editor'], {
-        state: event.row
-      });
-    }
+  onRowClick(event: { row: any }): void {
+    // Navigate to rule-editor with row data when any part of the row is clicked
+    this.router.navigate(['/rule-editor'], {
+      state: event.row
+    });
   }
 
   onNewRuleClick(): void {
