@@ -1,19 +1,19 @@
-.notes-container {
+.notes-section-container {
   background-color: #e9e6fd;
   padding: 20px;
   border-radius: 8px;
   margin-top: 20px;
-  animation: fadeIn 0.5s ease-in-out;
+  animation: notesFadeIn 0.5s ease-in-out;
 }
 
-.notes-header {
+.notes-section-container .notes-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
+  margin-bottom: 8px;
 }
 
-.notes-container .add-btn {
+.notes-section-container .add-btn {
   background-color: #0055aa;
   color: white;
   padding: 8px 16px;
@@ -30,54 +30,54 @@
   gap: 4px;
 }
 
-.notes-container .add-btn:hover {
+.notes-section-container .add-btn:hover {
   background-color: #003d80;
 }
 
-.notes-table {
+.notes-section-container .notes-table {
   width: 100%;
-  margin-top: 10px;
+  margin-top: 0;
   border-collapse: collapse;
   font-size: 14px;
 }
 
-.notes-table th,
-.notes-table td {
+.notes-section-container .notes-table th,
+.notes-section-container .notes-table td {
   border: 1px solid #999;
   padding: 8px;
   text-align: left;
 }
 
-.notes-table th {
+.notes-section-container .notes-table th {
   background-color: #ccccff;
 }
 
-.note-input {
+.notes-section-container .note-input {
   width: 95%;
   border: 1px solid #aaa;
   border-radius: 4px;
   transition: transform 0.3s ease;
 }
 
-.note-input:focus {
+.notes-section-container .note-input:focus {
   transform: scale(1.02);
   outline: none;
   border-color: #3333cc;
 }
 
 /* Animation */
-@keyframes fadeIn {
+@keyframes notesFadeIn {
   from { opacity: 0 }
   to { opacity: 1 }
 }
 
-.last-updated-cell {
+.notes-section-container .last-updated-cell {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.notes-container .delete-btn {
+.notes-section-container .delete-btn {
   background-color: #cc3333;
   color: white;
   border: none;
@@ -90,6 +90,6 @@
   line-height: 1.5;
 }
 
-.notes-container .delete-btn:hover {
+.notes-section-container .delete-btn:hover {
   background-color: #a60000;
 }

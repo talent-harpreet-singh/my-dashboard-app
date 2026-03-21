@@ -14,7 +14,11 @@ import {
   standalone: true,
   imports: [CommonModule, DynamicTableComponent],
   template: `
-    <div class="programs-table-container">
+    <div
+      class="programs-table-container"
+      [style.--dt-primary]="headerBackgroundColor"
+      [style.--dt-primary-dark]="headerBackgroundColor"
+      [style.--dt-bg-light]="tableBackgroundColor">
       <app-dynamic-table
         [config]="tableConfig"
         [data]="programsData"
@@ -111,6 +115,8 @@ import {
 })
 export class ProgramsTableComponent implements OnChanges {
   @Input() programs: Program[] = [];
+  @Input() headerBackgroundColor: string = '#1a4da0';
+  @Input() tableBackgroundColor: string = '#e6f3ff';
   
   @Output() programsChange = new EventEmitter<Program[]>();
   @Output() update = new EventEmitter<void>();

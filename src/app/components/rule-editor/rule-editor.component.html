@@ -15,7 +15,11 @@
     <app-notes-section [notes]="notes" [showDelete]="showDelete" (noteAdded)="onNoteAdded()"></app-notes-section>
   </div>
   <div class="rule-section">
-    <app-programs-table [programs]="programs"></app-programs-table>
+    <app-programs-table
+      [programs]="programs"
+      [headerBackgroundColor]="'#0f4ea8'"
+      [tableBackgroundColor]="'#eaf4ff'">
+    </app-programs-table>
   </div>
   <div class="button-bar">
     <button (click)="saveLocally()">💾 Save Locally</button>
