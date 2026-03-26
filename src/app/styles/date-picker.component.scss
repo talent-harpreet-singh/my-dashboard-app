@@ -9,7 +9,6 @@
   align-items: center;
   position: relative;
   width: 100%;
-  cursor: pointer;
 }
 
 .app-date-picker .date-input {
@@ -20,11 +19,21 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   background-color: #fff;
-  cursor: pointer;
+  cursor: text;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   width: 100%;
   box-sizing: border-box;
+}
+
+.app-date-picker .date-proxy-input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+  border: 0;
+  padding: 0;
 }
 
 .app-date-picker .date-input:hover {

@@ -28,14 +28,24 @@ import { MatIconModule } from '@angular/material/icon';
   ],
   template: `
     <div class="app-date-picker" [class.compact]="compact">
-      <div class="date-input-wrapper" (click)="picker.open()">
+      <div class="date-input-wrapper">
         <input
           class="date-input"
-          [matDatepicker]="picker"
           [placeholder]="placeholder"
+          [value]="inputValue"
+          (input)="onManualInput($event)"
+          (blur)="onManualInputBlur($event)"
+          (keydown.enter)="onManualInputBlur($event)"
+        />
+        <input
+          matInput
+          class="date-proxy-input"
+          [matDatepicker]="picker"
           [value]="selectedDate"
+          tabindex="-1"
+          aria-hidden="true"
           (dateChange)="onDateChange($event)"
-          readonly
+          (dateInput)="onDateInput($event)"
         />
         <mat-datepicker-toggle [for]="picker" class="date-toggle">
           <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
@@ -58,6 +68,7 @@ export class DatePickerComponent implements ControlValueAccessor {
   @ViewChild('picker') picker!: MatDatepicker<Date>;
 
   selectedDate: Date | null = null;
+  inputValue: string = '';
   
   private onChange: (value: string) => void = () => {};
   private onTouched: () => void = () => {};
@@ -77,11 +88,17 @@ export class DatePickerComponent implements ControlValueAccessor {
   }
 
   // ControlValueAccessor implementation
-  writeValue(value: string): void {
-    if (value) {
-      this.selectedDate = this.parseDate(value);
+  writeValue(value: any): void {
+    if (value instanceof Date) {
+      this.selectedDate = value;
+      this.inputValue = this.formatDate(value);
+    } else if (value) {
+      const valueStr = String(value);
+      this.selectedDate = this.parseDate(valueStr);
+      this.inputValue = valueStr;
     } else {
       this.selectedDate = null;
+      this.inputValue = '';
     }
   }
 
@@ -96,11 +113,56 @@ export class DatePickerComponent implements ControlValueAccessor {
   onDateChange(event: any): void {
     const date = event.value as Date;
     if (date) {
-      const formattedDate = this.formatDate(date);
-      this.onChange(formattedDate);
-      this.dateSelected.emit(formattedDate);
+      this.applyDate(date);
     }
     this.onTouched();
+  }
+
+  onDateInput(event: any): void {
+    const date = event.value as Date;
+    if (date) {
+      this.applyDate(date);
+    }
+  }
+
+  onManualInput(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.inputValue = target.value;
+    // Keep parent ngModel in sync during typing so input text is not reset.
+    this.onChange(this.inputValue);
+  }
+
+  onManualInputBlur(event?: Event): void {
+    const target = event?.target as HTMLInputElement | undefined;
+    const rawValue = (target?.value || '').trim();
+
+    if (!rawValue) {
+      this.selectedDate = null;
+      this.inputValue = '';
+      this.onChange('');
+      this.dateSelected.emit('');
+      this.onTouched();
+      return;
+    }
+
+    const parsed = this.parseDate(rawValue);
+    if (parsed) {
+      this.applyDate(parsed);
+    } else if (this.selectedDate && target) {
+      // Restore last valid value if typed text is invalid
+      const restoredValue = this.formatDate(this.selectedDate);
+      this.inputValue = restoredValue;
+      target.value = restoredValue;
+    }
+    this.onTouched();
+  }
+
+  private applyDate(date: Date): void {
+    this.selectedDate = date;
+    const formattedDate = this.formatDate(date);
+    this.inputValue = formattedDate;
+    this.onChange(formattedDate);
+    this.dateSelected.emit(formattedDate);
   }
 
   private formatDate(date: Date): string {
@@ -112,15 +174,29 @@ export class DatePickerComponent implements ControlValueAccessor {
 
   private parseDate(dateStr: string): Date | null {
     if (!dateStr) return null;
-    const parts = dateStr.split('-');
-    if (parts.length === 3) {
-      const month = parseInt(parts[0], 10) - 1;
-      const day = parseInt(parts[1], 10);
-      const year = parseInt(parts[2], 10);
-      if (!isNaN(month) && !isNaN(day) && !isNaN(year)) {
-        return new Date(year, month, day);
-      }
+
+    const normalized = dateStr.trim().replace(/\//g, '-');
+    const parts = normalized.split('-');
+    if (parts.length !== 3) return null;
+
+    const month = parseInt(parts[0], 10);
+    const day = parseInt(parts[1], 10);
+    const year = parseInt(parts[2], 10);
+
+    if (isNaN(month) || isNaN(day) || isNaN(year)) {
+      return null;
     }
+
+    const candidate = new Date(year, month - 1, day);
+    const isValidDate =
+      candidate.getFullYear() === year &&
+      candidate.getMonth() === month - 1 &&
+      candidate.getDate() === day;
+
+    if (isValidDate) {
+      return candidate;
+    }
+
     return null;
   }
 }
