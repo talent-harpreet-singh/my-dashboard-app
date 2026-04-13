@@ -15,7 +15,7 @@
           <div class="nav-link"
                [class.active]="openDropdownId === menu.menuOptionNo"
                [routerLink]="getSubMenus(menu.menuOptionNo).length === 0 ? ['/', menu.slugTx] : null"
-               (click)="toggleDropdown(menu.menuOptionNo)">
+               (click)="onNavMainClick(menu.menuOptionNo)">
             <div class="nav-link-content">
               <mat-icon class="menu-icon">{{ getMenuIcon(menu.menuOptionTx) }}</mat-icon>
               <span class="menu-text">{{ menu.menuOptionTx }}</span>

@@ -50,6 +50,15 @@ export class NavbarComponent implements OnInit {
     this.openDropdownId = this.openDropdownId === menuId ? null : menuId;
   }
 
+  /** Expand sidebar when collapsed so labels/submenus are usable after icon click */
+  onNavMainClick(menuId: number): void {
+    if (this.isCollapsed) {
+      this.isCollapsed = false;
+      this.collapsed.emit(false);
+    }
+    this.toggleDropdown(menuId);
+  }
+
   getSubMenus(menuId: number): MenuItem[] {
     return this.menus.filter(m => m.parentMenuOptNo === menuId);
   }

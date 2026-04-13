@@ -177,6 +177,7 @@ export class ProgramsTableComponent implements OnChanges {
         label: 'Start Dt',
         type: 'date',
         width: '130px',
+        placeholder: 'MM-DD-YYYY',
         sortable: true
       },
       {
@@ -184,7 +185,15 @@ export class ProgramsTableComponent implements OnChanges {
         label: 'End Dt',
         type: 'date',
         width: '130px',
-        sortable: true
+        placeholder: 'MM-DD-YYYY',
+        sortable: true,
+        validation: {
+          crossFieldValidation: {
+            relatedField: 'startDate',
+            operator: 'greaterThanOrEquals',
+            message: 'End date must be on or after start date'
+          }
+        }
       },
       {
         key: 'status',

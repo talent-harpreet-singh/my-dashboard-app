@@ -45,6 +45,15 @@
   box-shadow: 0 0 0 2px rgba(26, 77, 160, 0.1);
 }
 
+.app-date-picker .date-input.invalid {
+  border-color: #d9534f;
+
+  &:focus {
+    border-color: #d9534f;
+    box-shadow: 0 0 0 2px rgba(217, 83, 79, 0.2);
+  }
+}
+
 .app-date-picker .date-toggle {
   position: absolute;
   right: 4px;

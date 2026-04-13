@@ -8,6 +8,7 @@ import {
   TableActionEvent,
   TableValidationResult
 } from '../common/dynamic-table';
+import { formatMmDdYyyy } from '../../utils/mm-dd-yyyy-date.util';
 
 // Interface for Merchant Match data
 export interface MerchantMatch {
@@ -179,11 +180,11 @@ export class MerchantMatchTableComponent implements OnChanges {
   createNewRow = (): MerchantMatch => {
     return {
       matchCharCount: 0,
-      startDate: this.formatDate(new Date()),
+      startDate: formatMmDdYyyy(new Date()),
       endDate: '12-31-9999',
       status: 'P',
       userId: 'SYSTEM',
-      lastUpdatedDate: this.formatDateTime(new Date())
+      lastUpdatedDate: this.formatDateTime(new Date()),
     };
   };
   
@@ -242,15 +243,8 @@ export class MerchantMatchTableComponent implements OnChanges {
   }
   
   // Helper methods
-  private formatDate(date: Date): string {
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${month}-${day}-${year}`;
-  }
-  
   private formatDateTime(date: Date): string {
-    const dateStr = this.formatDate(date);
+    const dateStr = formatMmDdYyyy(date);
     const hours = date.getHours();
     const minutes = String(date.getMinutes()).padStart(2, '0');
     const seconds = String(date.getSeconds()).padStart(2, '0');

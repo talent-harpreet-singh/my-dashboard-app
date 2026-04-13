@@ -11,6 +11,7 @@ import {
   ValidationError,
   TableValidationResult 
 } from '../models/dynamic-table.model';
+import { formatMmDdYyyy, parseFlexibleToDate } from '../utils/mm-dd-yyyy-date.util';
 
 @Injectable({
   providedIn: 'root'
@@ -46,8 +47,13 @@ export class TableValidationService {
       case 'text':
       case 'textarea':
         return this.validateText(value, column, validation);
-      case 'date':
-        return this.validateDate(value, column, validation);
+      case 'date': {
+        const dateError = this.validateDate(value, column, validation);
+        if (dateError) {
+          return dateError;
+        }
+        break;
+      }
       case 'select':
         return this.validateSelect(value, column);
       default:
@@ -146,14 +152,14 @@ export class TableValidationService {
     if (column.minDate) {
       const minDate = this.parseDate(column.minDate);
       if (minDate && date < minDate) {
-        return `${column.label} must be on or after ${this.formatDate(minDate)}`;
+        return `${column.label} must be on or after ${formatMmDdYyyy(minDate)}`;
       }
     }
     
     if (column.maxDate) {
       const maxDate = this.parseDate(column.maxDate);
       if (maxDate && date > maxDate) {
-        return `${column.label} must be on or before ${this.formatDate(maxDate)}`;
+        return `${column.label} must be on or before ${formatMmDdYyyy(maxDate)}`;
       }
     }
     
@@ -183,6 +189,34 @@ export class TableValidationService {
     if (!config) return null;
     
     const relatedValue = row[config.relatedField];
+    const leftDate = this.parseDate(value);
+    const rightDate = this.parseDate(relatedValue);
+    
+    if (leftDate && rightDate) {
+      const lt = leftDate.getTime();
+      const rt = rightDate.getTime();
+      switch (config.operator) {
+        case 'greaterThan':
+          if (!(lt > rt)) return config.message;
+          break;
+        case 'lessThan':
+          if (!(lt < rt)) return config.message;
+          break;
+        case 'greaterThanOrEquals':
+          if (!(lt >= rt)) return config.message;
+          break;
+        case 'lessThanOrEquals':
+          if (!(lt <= rt)) return config.message;
+          break;
+        case 'equals':
+          if (lt !== rt) return config.message;
+          break;
+        case 'notEquals':
+          if (lt === rt) return config.message;
+          break;
+      }
+      return null;
+    }
     
     switch (config.operator) {
       case 'greaterThan':
@@ -312,31 +346,12 @@ export class TableValidationService {
 
   private parseDate(dateStr: string | Date): Date | null {
     if (dateStr instanceof Date) {
-      return dateStr;
+      return isNaN(dateStr.getTime()) ? null : dateStr;
     }
-    
-    if (!dateStr) return null;
-    
-    const parts = dateStr.split('-');
-    if (parts.length === 3) {
-      const month = parseInt(parts[0], 10) - 1;
-      const day = parseInt(parts[1], 10);
-      const year = parseInt(parts[2], 10);
-      if (!isNaN(month) && !isNaN(day) && !isNaN(year)) {
-        return new Date(year, month, day);
-      }
+    if (dateStr == null || dateStr === '') {
+      return null;
     }
-    
-    const date = new Date(dateStr);
-    return isNaN(date.getTime()) ? null : date;
-  }
-  
-
-  private formatDate(date: Date): string {
-    const mm = String(date.getMonth() + 1).padStart(2, '0');
-    const dd = String(date.getDate()).padStart(2, '0');
-    const yyyy = date.getFullYear();
-    return `${mm}-${dd}-${yyyy}`;
+    return parseFlexibleToDate(String(dateStr));
   }
 }
 

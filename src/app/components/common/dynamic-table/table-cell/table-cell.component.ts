@@ -81,6 +81,7 @@ import { DatePickerComponent } from '../../date-picker/date-picker.component';
             [ngModel]="value"
             [placeholder]="column.placeholder || 'MM-DD-YYYY'"
             [compact]="true"
+            [hasError]="hasError"
             (ngModelChange)="onDateChange($event)"
           ></app-date-picker>
         </div>
