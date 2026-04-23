@@ -1,9 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
 
 :root {
-  /* Fluid content width: uses viewport on laptop/desktop without exceeding readable line length on ultrawide */
+  /* ~1600px cap on typical laptop/desktop; scales up on very wide monitors (e.g. 27–32" 1440p/4K) */
   --app-content-max: min(100% - 1.5rem, 100rem);
   --app-pad-inline: clamp(0.75rem, 2vw, 1.75rem);
+}
+
+/* Large / ultrawide: allow wider main column (tables and dashboards get more room; still capped so text lines do not run edge-to-edge on 4K) */
+@media (min-width: 1920px) {
+  :root {
+    --app-content-max: min(100% - 2rem, 120rem);
+  }
+}
+
+@media (min-width: 2560px) {
+  :root {
+    --app-content-max: min(100% - 2.5rem, 140rem);
+  }
 }
 
 html {

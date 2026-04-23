@@ -17,7 +17,7 @@
 
 /* Optional: Centered with max-width */
 .detail-page-container.centered {
-  max-width: min(100%, 100rem);
+  max-width: var(--app-content-max, min(100% - 1.5rem, 100rem));
   margin: 0 auto;
 }
 

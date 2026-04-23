@@ -1,7 +1,7 @@
 // Demo Container
 .tab-demo-container {
   width: 100%;
-  max-width: min(100%, 100rem);
+  max-width: var(--app-content-max, min(100% - 1.5rem, 100rem));
   margin: 0 auto;
   padding: clamp(12px, 2vw, 20px);
   box-sizing: border-box;
