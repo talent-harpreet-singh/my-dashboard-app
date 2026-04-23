@@ -1,8 +1,10 @@
 // Demo Container
 .tab-demo-container {
-  max-width: 1200px;
+  width: 100%;
+  max-width: min(100%, 100rem);
   margin: 0 auto;
-  padding: 20px;
+  padding: clamp(12px, 2vw, 20px);
+  box-sizing: border-box;
   background: #f5f6fa;
   min-height: 200vh;
   height: auto;

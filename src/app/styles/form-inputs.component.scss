@@ -117,8 +117,9 @@ input.tier-profile-input:hover {
 }
 
 .form-label {
+  flex: 0 1 250px;
   width: 250px;
-  max-width: 250px;
+  max-width: min(100%, 250px);
   font-weight: bold;
   white-space: normal;
   word-break: break-word;
@@ -130,6 +131,13 @@ input.tier-profile-input:hover {
   flex: 1;
   min-width: 0;
   word-break: break-word;
+}
+
+@media (max-width: 900px) and (min-width: 601px) {
+  .form-label {
+    flex: 0 1 200px;
+    max-width: min(40%, 200px);
+  }
 }
 
 @media (max-width: 600px) {

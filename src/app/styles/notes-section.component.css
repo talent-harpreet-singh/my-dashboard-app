@@ -3,14 +3,21 @@
   padding: 20px;
   border-radius: 8px;
   margin-top: 20px;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   animation: notesFadeIn 0.5s ease-in-out;
 }
 
 .notes-section-container .notes-header {
   display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
+  min-width: 0;
 }
 
 .notes-section-container .add-btn {
@@ -92,4 +99,10 @@
 
 .notes-section-container .delete-btn:hover {
   background-color: #a60000;
+}
+
+@media (max-width: 600px) {
+  .notes-section-container {
+    padding: 12px;
+  }
 }

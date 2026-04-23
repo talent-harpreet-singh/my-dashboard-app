@@ -1,7 +1,9 @@
 .rule-editor-scroll {
-  max-height: 90vh;   /* Adjust as needed */
-  padding: 2rem 1rem;
-  width: 83vw;
+  max-height: 90vh;
+  padding: clamp(1rem, 3vw, 2rem) clamp(0.75rem, 2vw, 1rem);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   background: #f4f8fb;
   border-radius: 10px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.06);
@@ -13,9 +15,21 @@
 
 .button-bar {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
   justify-content: flex-end;
   margin-top: 2rem;
   padding-bottom: 1rem;
   background: #f4f8fb;
+}
+
+@media (max-width: 600px) {
+  .button-bar {
+    justify-content: stretch;
+  }
+
+  .button-bar > * {
+    flex: 1 1 auto;
+    min-width: min(100%, 140px);
+  }
 }

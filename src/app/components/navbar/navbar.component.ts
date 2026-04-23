@@ -1,9 +1,10 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, HostListener } from '@angular/core';
 import { MenuService, MenuItem } from '../../services/menu.service';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { RouterModule } from '@angular/router';
+import { Router, NavigationEnd, RouterModule } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-navbar',
@@ -18,8 +19,42 @@ export class NavbarComponent implements OnInit {
   mainMenus: MenuItem[] = [];
   openDropdownId: number | null = null;
   isCollapsed = false;
+  isMobileMenuOpen = false;
 
-  constructor(private menuService: MenuService) {}
+  constructor(
+    private menuService: MenuService,
+    private router: Router
+  ) {
+    this.router.events
+      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+      .subscribe(() => this.closeMobileMenu());
+  }
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    if (typeof window !== 'undefined' && window.innerWidth > 768) {
+      this.isMobileMenuOpen = false;
+    }
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  onDocumentKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+      this.closeMobileMenu();
+    }
+  }
+
+  closeMobileMenu(): void {
+    this.isMobileMenuOpen = false;
+  }
+
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+    if (this.isMobileMenuOpen) {
+      this.isCollapsed = false;
+      this.collapsed.emit(false);
+    }
+  }
 
   ngOnInit(): void {
     this.menuService.getMenuItems().subscribe((data: MenuItem[]) => {

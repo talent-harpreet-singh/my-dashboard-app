@@ -1,5 +1,14 @@
 <div class="layout">
-  <aside [class.collapsed]="isCollapsed" class="sidebar">
+  <div
+    class="sidebar-backdrop"
+    *ngIf="isMobileMenuOpen"
+    (click)="closeMobileMenu()"
+    aria-hidden="true">
+  </div>
+  <aside
+    [class.collapsed]="isCollapsed"
+    [class.mobile-open]="isMobileMenuOpen"
+    class="sidebar">
     <div class="sidebar-header">
       <button class="toggle-btn" (click)="toggleSidebar()">
         <mat-icon>{{ isCollapsed ? 'menu' : 'menu_open' }}</mat-icon>
@@ -49,7 +58,16 @@
       <div class="header-center-title">
         <h2 class="rewards-admin-title">Rewards Admin</h2>
       </div>
-      <div class="header-right"></div>
+      <div class="header-right">
+        <button
+          type="button"
+          class="mobile-menu-btn"
+          (click)="toggleMobileMenu()"
+          [attr.aria-expanded]="isMobileMenuOpen"
+          [attr.aria-label]="isMobileMenuOpen ? 'Close menu' : 'Open menu'">
+          <mat-icon>{{ isMobileMenuOpen ? 'close' : 'menu' }}</mat-icon>
+        </button>
+      </div>
     </div>
     <div class="center-content">
       <router-outlet></router-outlet>

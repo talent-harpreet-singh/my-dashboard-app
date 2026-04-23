@@ -5,8 +5,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right))
+    max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  box-sizing: border-box;
   animation: fadeIn 0.3s ease;
-  z-index: 1000;
+  z-index: 2000;
 }
 
 .modal-container {
@@ -14,7 +17,11 @@
   padding: 1rem 1.5rem;
   border-radius: 10px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-  width: 420px;
+  width: min(100%, 420px);
+  max-width: calc(100vw - 2rem);
+  max-height: 90vh;
+  overflow: auto;
+  box-sizing: border-box;
   animation: slideUp 0.3s ease;
   border-left: 5px solid #0055aa;
 }

@@ -56,6 +56,7 @@ import {
     
     .programs-button-group {
       display: flex;
+      flex-wrap: wrap;
       gap: 8px;
       margin-top: 16px;
       padding: 12px 0;

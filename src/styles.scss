@@ -1,7 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+:root {
+  /* Fluid content width: uses viewport on laptop/desktop without exceeding readable line length on ultrawide */
+  --app-content-max: min(100% - 1.5rem, 100rem);
+  --app-pad-inline: clamp(0.75rem, 2vw, 1.75rem);
+}
+
+html {
+  height: 100%;
+  overflow-x: clip;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
 
 
 @import 'app/styles/app.component.css';

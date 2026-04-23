@@ -46,7 +46,9 @@ import { MatIconModule } from '@angular/material/icon';
   styles: [`
     .welcome-container {
       min-height: 100vh;
-      width: 100vw;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
       display: flex;
       align-items: center;
       justify-content: center;

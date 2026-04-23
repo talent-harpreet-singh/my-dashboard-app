@@ -1,8 +1,19 @@
 .app-container {
   display: flex;
   min-height: 100vh;
+  min-width: 0;
+  max-width: 100%;
   background: #f5f6fa;
   position: relative;
+}
+
+/* Sibling to fixed navbar: keeps flex layout from overflowing when a second router-outlet is used */
+.main-content {
+  flex: 1;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: clip;
+  box-sizing: border-box;
 }
 
 .content {
@@ -41,7 +52,12 @@ app-navbar {
   top: 0;
   bottom: 0;
   z-index: 1000;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
+
+/* Mobile nav is handled inside app-navbar (drawer + backdrop), not by hiding the host. */
 
 @media (max-width: 768px) {
   .main-content {
@@ -55,23 +71,16 @@ app-navbar {
     transform: none;
     padding: 15px;
   }
-
-  app-navbar {
-    position: fixed;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-  }
-
-  app-navbar.expanded {
-    transform: translateX(0);
-  }
 }
 
 .center-content {
-  max-width: 1200px; /* or whatever width you prefer */
+  max-width: var(--app-content-max, min(100% - 1.5rem, 100rem));
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center; /* optional, for vertical centering of children */
-  margin-top:3rem
+  align-items: stretch;
+  margin: 3rem auto 0;
+  padding-left: var(--app-pad-inline, clamp(0.75rem, 2vw, 1.75rem));
+  padding-right: var(--app-pad-inline, clamp(0.75rem, 2vw, 1.75rem));
+  box-sizing: border-box;
 }
