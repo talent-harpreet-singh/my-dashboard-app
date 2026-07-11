@@ -17,11 +17,14 @@
   <div class="rule-section">
     <app-programs-table
       [programs]="programs"
+      [exportable]="false"
       [headerBackgroundColor]="'#0f4ea8'"
-      [tableBackgroundColor]="'#eaf4ff'">
+      [tableBackgroundColor]="'#eaf4ff'"
+      (programsChange)="programs = $event">
     </app-programs-table>
   </div>
   <div class="button-bar">
+    <button type="button" (click)="exportToExcel()">Export to Excel</button>
     <button (click)="saveLocally()">💾 Save Locally</button>
     <button (click)="clearStorage()">🧹 Clear Storage</button>
   </div>

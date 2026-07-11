@@ -11,8 +11,21 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { FormField } from '../../models/form-model';
+import {
+  exportDetailPageToExcel,
+  DetailPageExcelExportConfig
+} from '../../utils/excel-export.util';
 
 const LOCAL_STORAGE_KEY = 'ruleEditorData';
+
+interface RuleEditorNavState {
+  promoId?: string | number;
+  displayName?: string;
+  lastUpdateDate?: string;
+  status?: string;
+  userId?: string;
+  lob?: number | string;
+}
 
 @Component({
   selector: 'app-rule-editor',
@@ -21,6 +34,7 @@ const LOCAL_STORAGE_KEY = 'ruleEditorData';
   standalone: true
 })
 export class RuleEditorComponent implements OnInit {
+  ruleId: string = '';
   ruleDetails!: RuleDetails;
   programs!: Program[];
   notes!: Note[];
@@ -117,9 +131,9 @@ export class RuleEditorComponent implements OnInit {
   ngOnInit(): void {
     // Check if data was passed via route state (from PR Bonus Rules table)
     const navigation = this.router.getCurrentNavigation();
-    const rowData = navigation?.extras?.state;
+    const rowData = navigation?.extras?.state as RuleEditorNavState | undefined;
 
-    if (rowData && rowData['promoId']) {
+    if (rowData && rowData.promoId) {
       // Pre-fill form with data from clicked row
       this.initializeWithRowData(rowData);
     } else {
@@ -132,6 +146,7 @@ export class RuleEditorComponent implements OnInit {
         this.initializeEmptyRule();
       } else {
         // Load from localStorage or use default data
+        this.ruleId = '';
         const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
         if (saved) {
           const parsed = JSON.parse(saved);
@@ -153,6 +168,7 @@ export class RuleEditorComponent implements OnInit {
   }
 
   private initializeEmptyRule(): void {
+    this.ruleId = '';
     // Initialize with empty/default values (no Last Updated, Status, User ID)
     this.ruleDetails = {
       lastUpdatedDate: '',
@@ -175,7 +191,8 @@ export class RuleEditorComponent implements OnInit {
     this.notes = [];
   }
 
-  private initializeWithRowData(rowData: any): void {
+  private initializeWithRowData(rowData: RuleEditorNavState): void {
+    this.ruleId = String(rowData.promoId ?? '');
     const defaultRuleDetails = this.dataService.getRuleDetails();
     
     this.ruleDetails = {
@@ -241,5 +258,77 @@ export class RuleEditorComponent implements OnInit {
   clearStorage(): void {
     localStorage.removeItem(LOCAL_STORAGE_KEY);
     window.location.reload();
+  }
+
+  exportToExcel(): void {
+    const title = this.ruleId
+      ? `PR / RR Bonus Rule ${this.ruleId} Details`
+      : 'PR / RR Bonus Rule Details';
+
+    const fileName = this.ruleId
+      ? `PR_RR_Bonus_Rule_${this.ruleId}_Details.xlsx`
+      : 'PR_RR_Bonus_Rule_Details.xlsx';
+
+    const config: DetailPageExcelExportConfig = {
+      fileName,
+      sheetName: 'Details',
+      title,
+      meta: [
+        { label: 'Last Updated Date', value: this.ruleDetails?.lastUpdatedDate },
+        { label: 'Status', value: this.ruleDetails?.status },
+        { label: 'User Id', value: this.ruleDetails?.userId }
+      ],
+      fields: this.ruleFormFields.map((f) => ({
+        label: f.label,
+        value: this.ruleDetails?.[f.key]
+      })),
+      sections: [
+        {
+          type: 'table-data',
+          title: 'Notes',
+          columns: [
+            { key: 'seqNo', header: 'Note Seq No' },
+            { key: 'note', header: 'Notes' },
+            { key: 'userId', header: 'User ID' },
+            { key: 'lastUpdated', header: 'Last Updated Date' }
+          ],
+          rows: (this.notes || []).map((n) => ({
+            seqNo: n.seqNo,
+            note: n.note,
+            userId: n.userId,
+            lastUpdated: n.lastUpdated
+          }))
+        },
+        {
+          type: 'table-data',
+          title: 'Programs attached to this promo',
+          columns: [
+            { key: 'programNumber', header: 'Program Number' },
+            { key: 'legacyCode', header: 'Legacy Code' },
+            { key: 'description', header: 'Description' },
+            { key: 'startDate', header: 'Start Dt' },
+            { key: 'endDate', header: 'End Dt' },
+            { key: 'status', header: 'Status' },
+            { key: 'userId', header: 'User Id' },
+            { key: 'lastUpdated', header: 'Last Updated Date' }
+          ],
+          rows: (this.programs || []).map((p) => ({
+            programNumber: p.programNumber,
+            legacyCode: p.legacyCode,
+            description: p.description,
+            startDate: p.startDate,
+            endDate: p.endDate,
+            status: p.status,
+            userId: p.userId,
+            lastUpdated: p.lastUpdated
+          }))
+        }
+      ]
+    };
+
+    const result = exportDetailPageToExcel(config);
+    if (!result.success) {
+      alert(result.error || 'Export failed');
+    }
   }
 }

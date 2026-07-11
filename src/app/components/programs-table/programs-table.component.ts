@@ -118,6 +118,7 @@ export class ProgramsTableComponent implements OnChanges {
   @Input() programs: Program[] = [];
   @Input() headerBackgroundColor: string = '#1a4da0';
   @Input() tableBackgroundColor: string = '#e6f3ff';
+  @Input() exportable: boolean = true;
   
   @Output() programsChange = new EventEmitter<Program[]>();
   @Output() update = new EventEmitter<void>();
@@ -248,6 +249,12 @@ export class ProgramsTableComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['programs']) {
       this.programsData = [...this.programs];
+    }
+    if (changes['exportable']) {
+      this.tableConfig = {
+        ...this.tableConfig,
+        exportable: this.exportable
+      };
     }
   }
   

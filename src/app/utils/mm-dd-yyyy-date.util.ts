@@ -1,7 +1,9 @@
 
 
 function toCalendarDate(year: number, month: number, day: number): Date | null {
-  const candidate = new Date(year, month - 1, day);
+  const candidate = new Date(0);
+  candidate.setFullYear(year, month - 1, day);
+  candidate.setHours(0, 0, 0, 0);
   if (
     candidate.getFullYear() === year &&
     candidate.getMonth() === month - 1 &&
@@ -15,7 +17,7 @@ function toCalendarDate(year: number, month: number, day: number): Date | null {
 export function formatMmDdYyyy(date: Date): string {
   const mm = String(date.getMonth() + 1).padStart(2, '0');
   const dd = String(date.getDate()).padStart(2, '0');
-  const yyyy = date.getFullYear();
+  const yyyy = String(date.getFullYear()).padStart(4, '0');
   return `${mm}-${dd}-${yyyy}`;
 }
 
